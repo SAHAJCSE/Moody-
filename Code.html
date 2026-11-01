@@ -3052,13 +3052,21 @@ function syncVitalsUI() {
   const act = Number(wellnessMetrics.activityMinutes ?? 40);
   const actGoal = Number(wellnessMetrics.activityGoal || 60);
 
-  // Text values in the all-in-one square card
+  // Text values in the all-in-one square card with separate goal texts
   const wText = document.getElementById('waterValText');
   if (wText) wText.textContent = `${water}ml`;
+  const wGoal = document.getElementById('waterGoalText');
+  if (wGoal) wGoal.textContent = `/ ${waterGoal}ml`;
+
   const rText = document.getElementById('relaxValText');
   if (rText) rText.textContent = `${relax}min`;
+  const rGoal = document.getElementById('relaxGoalText');
+  if (rGoal) rGoal.textContent = `/ ${relaxGoal}min`;
+
   const aText = document.getElementById('actValText');
   if (aText) aText.textContent = `${act}min`;
+  const aGoal = document.getElementById('actGoalText');
+  if (aGoal) aGoal.textContent = `/ ${actGoal}min`;
 
   // Concentric Circular Rings Progress
   // 1. Outer Ring (Water, r=72): Circumference = 2 * Math.PI * 72 = 452.39
@@ -3097,7 +3105,7 @@ function syncVitalsUI() {
     aRing.setAttribute('stroke-dashoffset', `${actOffset}`);
   }
 
-  // Center Score (Average percentage of all 3 goals)
+  // Outside Score (Average percentage of all 3 goals, positioned cleanly outside the rings)
   const avgPct = Math.round(((water / waterGoal + relax / relaxGoal + act / actGoal) / 3) * 100);
   const coreScore = document.getElementById('vitalsCoreScore');
   if (coreScore) coreScore.textContent = `${avgPct}%`;
@@ -3113,6 +3121,231 @@ function syncVitalsUI() {
       statusTag.style.color = '#4B5563';
     }
   }
+}
+
+/* ============================================================
+   SLIM POPUP WITH BACKDROP BLUR & SMOOTH SCROLL WHEEL PICKER
+   ============================================================ */
+let activePickerCategory = 'water'; // 'water' | 'relax' | 'activity'
+let activePickerMode = 'current';   // 'current' | 'goal'
+let pickerSelectedValue = 1750;
+let isProgrammaticWheelScroll = false;
+
+const pickerConfigs = {
+  water: {
+    name: 'Water Intake',
+    unit: 'ml',
+    color: '#0284C7',
+    min: 0,
+    max: 5000,
+    step: 50,
+    presets: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000],
+    getCurrent: () => Number(wellnessMetrics.waterLevel ?? 1750),
+    getGoal: () => Number(wellnessMetrics.waterGoal || 2500),
+    setCurrent: (v) => { wellnessMetrics.waterLevel = v; },
+    setGoal: (v) => { wellnessMetrics.waterGoal = v; }
+  },
+  relax: {
+    name: 'Relax Time',
+    unit: 'min',
+    color: '#7C3AED',
+    min: 0,
+    max: 240,
+    step: 5,
+    presets: [10, 20, 30, 45, 60, 75, 90, 120],
+    getCurrent: () => Number(wellnessMetrics.relaxMinutes ?? 30),
+    getGoal: () => Number(wellnessMetrics.relaxGoal || 45),
+    setCurrent: (v) => { wellnessMetrics.relaxMinutes = v; },
+    setGoal: (v) => { wellnessMetrics.relaxGoal = v; }
+  },
+  activity: {
+    name: 'Physical Activity',
+    unit: 'min',
+    color: '#10B981',
+    min: 0,
+    max: 300,
+    step: 5,
+    presets: [15, 30, 45, 60, 75, 90, 120, 150],
+    getCurrent: () => Number(wellnessMetrics.activityMinutes ?? 40),
+    getGoal: () => Number(wellnessMetrics.activityGoal || 60),
+    setCurrent: (v) => {
+      wellnessMetrics.activityMinutes = v;
+      wellnessMetrics.activity = `${v} min`;
+    },
+    setGoal: (v) => { wellnessMetrics.activityGoal = v; }
+  }
+};
+
+function openSlimVitalPicker(category) {
+  playClickSound();
+  activePickerCategory = category || 'water';
+  activePickerMode = 'current';
+  
+  const modal = document.getElementById('slimVitalPickerModal');
+  if (!modal) return;
+
+  renderSlimPickerUI();
+  modal.style.display = 'flex';
+  // Small tick for CSS animation
+  requestAnimationFrame(() => {
+    modal.classList.add('open');
+  });
+  
+  // Smoothly align scroll wheel
+  setTimeout(() => {
+    scrollWheelTo(pickerSelectedValue, false);
+  }, 40);
+}
+
+function closeSlimVitalPicker() {
+  playClickSound();
+  const modal = document.getElementById('slimVitalPickerModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  setTimeout(() => {
+    if (!modal.classList.contains('open')) {
+      modal.style.display = 'none';
+    }
+  }, 300);
+}
+
+function handleSlimBackdropClick(e) {
+  if (e.target.id === 'slimVitalPickerModal') {
+    closeSlimVitalPicker();
+  }
+}
+
+function switchSlimPickerTab(mode) {
+  playClickSound();
+  activePickerMode = mode;
+  document.getElementById('tabCurrentVal').classList.toggle('active', mode === 'current');
+  document.getElementById('tabGoalVal').classList.toggle('active', mode === 'goal');
+  renderSlimPickerUI();
+  setTimeout(() => {
+    scrollWheelTo(pickerSelectedValue, true);
+  }, 30);
+}
+
+function renderSlimPickerUI() {
+  const cfg = pickerConfigs[activePickerCategory];
+  if (!cfg) return;
+
+  const initialVal = activePickerMode === 'current' ? cfg.getCurrent() : cfg.getGoal();
+  pickerSelectedValue = initialVal;
+
+  // Header Elements
+  const dot = document.getElementById('slimPopDot');
+  if (dot) dot.style.background = cfg.color;
+  const title = document.getElementById('slimPopTitle');
+  if (title) title.textContent = activePickerMode === 'current' ? `Set ${cfg.name}` : `Set ${cfg.name} Daily Goal`;
+  const desc = document.getElementById('slimPopDesc');
+  if (desc) desc.textContent = `Scroll smoothly to choose your exact ${cfg.unit}`;
+
+  // Tabs
+  const curTab = document.getElementById('tabCurrentVal');
+  if (curTab) curTab.textContent = `Current (${cfg.getCurrent()}${cfg.unit})`;
+  const goalTab = document.getElementById('tabGoalVal');
+  if (goalTab) goalTab.textContent = `Daily Goal (${cfg.getGoal()}${cfg.unit})`;
+
+  // Render Scroll Wheel Items
+  const viewport = document.getElementById('scrollWheelViewport');
+  if (viewport) {
+    let itemsHTML = '';
+    for (let v = cfg.min; v <= cfg.max; v += cfg.step) {
+      itemsHTML += `<div class="scroll-wheel-item ${v === initialVal ? 'selected' : ''}" data-val="${v}" onclick="selectWheelItemDirectly(${v})">${v} <small style="font-size:13px;font-weight:700;margin-left:4px;opacity:0.8">${cfg.unit}</small></div>`;
+    }
+    viewport.innerHTML = itemsHTML;
+  }
+
+  // Render Presets
+  const presetsWrap = document.getElementById('slimPopPresets');
+  if (presetsWrap) {
+    presetsWrap.innerHTML = cfg.presets.map(p => `
+      <button type="button" class="slim-preset-chip ${p === initialVal ? 'active' : ''}" onclick="selectWheelItemDirectly(${p})">${p}${cfg.unit}</button>
+    `).join('');
+  }
+
+  updateSlimLiveText();
+}
+
+function updateSlimLiveText() {
+  const cfg = pickerConfigs[activePickerCategory];
+  const txt = document.getElementById('slimLiveValText');
+  if (txt && cfg) {
+    txt.textContent = `${pickerSelectedValue} ${cfg.unit}`;
+  }
+}
+
+function handleWheelScroll() {
+  if (isProgrammaticWheelScroll) return;
+  const viewport = document.getElementById('scrollWheelViewport');
+  if (!viewport) return;
+
+  const itemHeight = 44;
+  const scrollTop = viewport.scrollTop;
+  const index = Math.round(scrollTop / itemHeight);
+  const items = viewport.querySelectorAll('.scroll-wheel-item');
+  if (index >= 0 && index < items.length) {
+    const item = items[index];
+    const val = Number(item.dataset.val);
+    if (!isNaN(val) && val !== pickerSelectedValue) {
+      pickerSelectedValue = val;
+      items.forEach(it => it.classList.remove('selected'));
+      item.classList.add('selected');
+      updateSlimLiveText();
+      
+      // Update preset chips
+      document.querySelectorAll('.slim-preset-chip').forEach(chip => {
+        chip.classList.toggle('active', chip.textContent.startsWith(String(val)));
+      });
+    }
+  }
+}
+
+function scrollWheelTo(targetVal, smooth = true) {
+  const viewport = document.getElementById('scrollWheelViewport');
+  if (!viewport) return;
+  const items = Array.from(viewport.querySelectorAll('.scroll-wheel-item'));
+  const index = items.findIndex(it => Number(it.dataset.val) === Number(targetVal));
+  if (index !== -1) {
+    isProgrammaticWheelScroll = true;
+    items.forEach((it, i) => it.classList.toggle('selected', i === index));
+    pickerSelectedValue = targetVal;
+    updateSlimLiveText();
+
+    viewport.scrollTo({
+      top: index * 44,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+
+    setTimeout(() => {
+      isProgrammaticWheelScroll = false;
+    }, smooth ? 350 : 50);
+  }
+}
+
+function selectWheelItemDirectly(val) {
+  playClickSound();
+  scrollWheelTo(val, true);
+}
+
+function confirmSlimVitalValue() {
+  playClickSound();
+  const cfg = pickerConfigs[activePickerCategory];
+  if (!cfg) return;
+
+  if (activePickerMode === 'current') {
+    cfg.setCurrent(pickerSelectedValue);
+    showCustomToast(`${cfg.name} set to ${pickerSelectedValue}${cfg.unit}`);
+  } else {
+    cfg.setGoal(pickerSelectedValue);
+    showCustomToast(`${cfg.name} goal set to ${pickerSelectedValue}${cfg.unit}`);
+  }
+
+  saveStorage();
+  syncVitalsUI();
+  syncCalendarMiniStats();
+  closeSlimVitalPicker();
 }
 
 /* ============================================================
