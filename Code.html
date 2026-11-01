@@ -1115,56 +1115,61 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
   font-weight:600;
   font-size:11px;
 }
+.vital-row-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+/* Enhanced, Larger Edit Button */
 .vital-edit-indicator{
-  font-size:9.5px;
+  font-size:12px;
   font-weight:800;
   background:#EDE9FE;
   color:#6D28D9;
-  padding:2px 6px;
-  border-radius:7px;
-  letter-spacing:.2px;
-  opacity:0.85;
-  transition:all .15s ease;
-}
-.vital-row-item:hover .vital-edit-indicator{
-  opacity:1;
-  background:#DDD6FE;
-}
-.vital-row-actions{
-  display:flex;
-  gap:5px;
-}
-.vital-action-btn{
-  background:#FFFFFF;
-  border:1.5px solid #E2E8F0;
-  padding:5px 9px;
+  border:1.5px solid #DDD6FE;
+  padding:5.5px 13px;
   border-radius:12px;
-  font-size:11px;
-  font-weight:800;
-  color:#1E293B;
-  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+  letter-spacing:.2px;
   cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 1px 3px rgba(109,40,217,0.06);
+}
+.vital-edit-indicator:hover{
+  background:#DDD6FE;
+  color:#5B21B6;
+  transform:scale(1.04);
+}
+.vital-edit-indicator:active{
+  transform:scale(0.96);
+}
+
+/* Single Add Feature Button (Smooth Scroll Picker Trigger) */
+.vital-single-add-btn{
+  background:#0F172A;
+  color:#FFFFFF;
+  border:none;
+  padding:5.5px 14px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.2px;
+  box-shadow:0 2px 6px rgba(15,23,42,0.12);
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
   transition:all .15s cubic-bezier(0.16,1,0.3,1);
 }
-.vital-action-btn:hover{
-  background:#111;
-  color:#FFF;
-  border-color:#111;
-  transform:scale(1.05);
+.vital-single-add-btn:hover{
+  background:#1E293B;
+  transform:scale(1.04);
 }
-.vital-action-btn:active{
-  transform:scale(0.95);
-}
-/* Red Deduct Button */
-.vital-action-btn.deduct{
-  background:#FEE2E2;
-  color:#DC2626;
-  border:1.5px solid #FCA5A5;
-}
-.vital-action-btn.deduct:hover{
-  background:#DC2626;
-  color:#FFFFFF;
-  border-color:#DC2626;
+.vital-single-add-btn:active{
+  transform:scale(0.96);
 }
 
 /* ============================================================
@@ -1830,56 +1835,50 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
           </div>
         </div>
 
-        <!-- 3 Interactive Metric Rows with Spacing and Tap to Set -->
+        <!-- 3 Interactive Metric Rows with Spacing, Larger Edit & Single Add -->
         <div class="vitals-metrics-rows">
           <!-- Water Intake Row -->
           <div class="vital-row-item">
-            <div class="vital-row-info" onclick="openSlimVitalPicker('water')" title="Tap to set specific ml">
+            <div class="vital-row-info" onclick="openSlimVitalPicker('water','current')" title="Tap to set water">
               <span class="vital-color-dot" style="background:#0284C7;box-shadow:0 0 6px rgba(2,132,199,0.4)"></span>
               <div class="vital-row-text">
                 <span class="vital-cat-name">Water</span>
                 <span class="vital-reading"><strong id="waterValText">1750ml</strong> <small id="waterGoalText">/ 2500ml</small></span>
               </div>
-              <span class="vital-edit-indicator">Edit</span>
             </div>
             <div class="vital-row-actions">
-              <button class="vital-action-btn deduct" onclick="adjustWater(-250)">-250ml</button>
-              <button class="vital-action-btn" onclick="adjustWater(250)">+250ml</button>
-              <button class="vital-action-btn" onclick="adjustWater(500)">+500ml</button>
+              <button type="button" class="vital-edit-indicator" onclick="openSlimVitalPicker('water','goal')" title="Edit daily goal">Edit</button>
+              <button type="button" class="vital-single-add-btn" onclick="openSlimVitalPicker('water','current')">+ Add</button>
             </div>
           </div>
 
           <!-- Relax Time Row -->
           <div class="vital-row-item">
-            <div class="vital-row-info" onclick="openSlimVitalPicker('relax')" title="Tap to set specific min">
+            <div class="vital-row-info" onclick="openSlimVitalPicker('relax','current')" title="Tap to set relax time">
               <span class="vital-color-dot" style="background:#7C3AED;box-shadow:0 0 6px rgba(124,58,237,0.4)"></span>
               <div class="vital-row-text">
                 <span class="vital-cat-name">Relax</span>
                 <span class="vital-reading"><strong id="relaxValText">30min</strong> <small id="relaxGoalText">/ 45min</small></span>
               </div>
-              <span class="vital-edit-indicator">Edit</span>
             </div>
             <div class="vital-row-actions">
-              <button class="vital-action-btn deduct" onclick="adjustRelax(-10)">-10 min</button>
-              <button class="vital-action-btn" onclick="adjustRelax(10)">+10 min</button>
-              <button class="vital-action-btn" onclick="adjustRelax(15)">+15 min</button>
+              <button type="button" class="vital-edit-indicator" onclick="openSlimVitalPicker('relax','goal')" title="Edit daily goal">Edit</button>
+              <button type="button" class="vital-single-add-btn" onclick="openSlimVitalPicker('relax','current')">+ Add</button>
             </div>
           </div>
 
           <!-- Physical Activity Row -->
           <div class="vital-row-item">
-            <div class="vital-row-info" onclick="openSlimVitalPicker('activity')" title="Tap to set specific min">
+            <div class="vital-row-info" onclick="openSlimVitalPicker('activity','current')" title="Tap to set activity">
               <span class="vital-color-dot" style="background:#10B981;box-shadow:0 0 6px rgba(16,185,129,0.4)"></span>
               <div class="vital-row-text">
                 <span class="vital-cat-name">Activity</span>
                 <span class="vital-reading"><strong id="actValText">40min</strong> <small id="actGoalText">/ 60min</small></span>
               </div>
-              <span class="vital-edit-indicator">Edit</span>
             </div>
             <div class="vital-row-actions">
-              <button class="vital-action-btn deduct" onclick="adjustActivity(-15)">-15 min</button>
-              <button class="vital-action-btn" onclick="adjustActivity(15)">+15 min</button>
-              <button class="vital-action-btn" onclick="adjustActivity(30)">+30 min</button>
+              <button type="button" class="vital-edit-indicator" onclick="openSlimVitalPicker('activity','goal')" title="Edit daily goal">Edit</button>
+              <button type="button" class="vital-single-add-btn" onclick="openSlimVitalPicker('activity','current')">+ Add</button>
             </div>
           </div>
         </div>
@@ -3178,10 +3177,10 @@ const pickerConfigs = {
   }
 };
 
-function openSlimVitalPicker(category) {
+function openSlimVitalPicker(category, mode = 'current') {
   playClickSound();
   activePickerCategory = category || 'water';
-  activePickerMode = 'current';
+  activePickerMode = mode || 'current';
   
   const modal = document.getElementById('slimVitalPickerModal');
   if (!modal) return;
