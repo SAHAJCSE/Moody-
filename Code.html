@@ -960,12 +960,19 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 }
 
 /* Center Concentric Circular Rings */
+.vitals-ring-layout{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:4px 0 16px;
+}
 .vitals-ring-center{
   display:flex;
   justify-content:center;
   align-items:center;
   position:relative;
-  margin:10px auto 16px;
+  margin:4px auto 8px;
   width:180px;
   height:180px;
 }
@@ -986,29 +993,62 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
   transform-origin:50% 50%;
   transition:stroke-dashoffset 0.45s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s ease;
 }
-.vitals-ring-core{
-  position:absolute;
-  inset:0;
+
+/* Outside Ring Score & Legend (Clean, Outside the Rings) */
+.vitals-outside-score-card{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  pointer-events:none;
+  gap:8px;
+  margin-top:2px;
+}
+.vitals-score-outside{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
 }
 .vitals-core-score{
-  font-size:24px;
+  font-size:28px;
   font-weight:900;
-  letter-spacing:-1px;
-  color:#111;
+  letter-spacing:-1.2px;
+  color:#0F172A;
   line-height:1;
 }
 .vitals-core-sub{
-  font-size:10px;
+  font-size:12px;
+  font-weight:700;
+  color:#64748B;
+  letter-spacing:-0.2px;
+}
+.vitals-outside-legend{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.vitals-legend-pill{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  background:#F1F5F9;
+  border-radius:12px;
+  padding:3px 9px;
+  font-size:11px;
   font-weight:800;
-  color:#8E8994;
-  margin-top:3px;
-  text-transform:uppercase;
-  letter-spacing:.6px;
+  color:#334155;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.vitals-legend-pill:hover{
+  background:#E2E8F0;
+  transform:translateY(-1px);
+}
+.legend-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  flex-shrink:0;
 }
 
 /* Bottom 3 Vitals Metrics Rows */
@@ -1035,6 +1075,8 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
   display:flex;
   align-items:center;
   gap:8px;
+  cursor:pointer;
+  user-select:none;
 }
 .vital-color-dot{
   width:10px;
@@ -1043,19 +1085,45 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
   flex-shrink:0;
 }
 .vital-row-text{
+  display:flex;
+  align-items:center;
+  gap:6px;
   font-size:12px;
   font-weight:700;
   color:#1E293B;
 }
-.vital-row-text strong{
+.vital-cat-name{
+  font-weight:800;
+  color:#0F172A;
+}
+.vital-reading{
+  display:inline-flex;
+  align-items:baseline;
+  gap:3px;
+}
+.vital-reading strong{
   font-weight:900;
   color:#0F172A;
-  margin-left:4px;
 }
-.vital-row-text small{
-  color:#736F78;
+.vital-reading small{
+  color:#64748B;
   font-weight:600;
-  font-size:10.5px;
+  font-size:11px;
+}
+.vital-edit-indicator{
+  font-size:9.5px;
+  font-weight:800;
+  background:#EDE9FE;
+  color:#6D28D9;
+  padding:2px 6px;
+  border-radius:7px;
+  letter-spacing:.2px;
+  opacity:0.85;
+  transition:all .15s ease;
+}
+.vital-row-item:hover .vital-edit-indicator{
+  opacity:1;
+  background:#DDD6FE;
 }
 .vital-row-actions{
   display:flex;
@@ -1087,6 +1155,261 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
   background:#FEE2E2;
   color:#DC2626;
   border:1.5px solid #FCA5A5;
+}
+.vital-action-btn.deduct:hover{
+  background:#DC2626;
+  color:#FFFFFF;
+  border-color:#DC2626;
+}
+
+/* ============================================================
+   SLIM POPUP WITH BACKDROP BLUR & SMOOTH SCROLL WHEEL PICKER
+   ============================================================ */
+.slim-pop-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(15, 12, 28, 0.45);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  z-index:99999;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  opacity:0;
+  transition:opacity 0.28s ease;
+}
+.slim-pop-backdrop.open{
+  display:flex;
+  opacity:1;
+}
+.slim-pop-sheet{
+  width:100%;
+  max-width:440px;
+  background:rgba(255, 255, 255, 0.94);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255, 255, 255, 0.7);
+  border-radius:32px 32px 0 0;
+  box-shadow:0 -12px 48px rgba(0, 0, 0, 0.16);
+  padding:14px 20px 24px;
+  transform:translateY(100%);
+  transition:transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
+}
+.slim-pop-backdrop.open .slim-pop-sheet{
+  transform:translateY(0);
+}
+.slim-pop-handle{
+  width:38px;
+  height:4px;
+  background:rgba(0,0,0,0.18);
+  border-radius:3px;
+  margin:0 auto 12px;
+}
+.slim-pop-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.slim-pop-title-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.slim-pop-dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#0284C7;
+  flex-shrink:0;
+}
+.slim-pop-title{
+  font-size:16px;
+  font-weight:900;
+  color:#0F172A;
+  letter-spacing:-0.3px;
+  margin:0;
+}
+.slim-pop-desc{
+  font-size:11px;
+  font-weight:600;
+  color:#64748B;
+  margin:2px 0 0;
+}
+.slim-pop-close{
+  background:rgba(0,0,0,0.06);
+  border:none;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  font-size:18px;
+  line-height:1;
+  color:#475569;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s ease;
+}
+.slim-pop-close:hover{
+  background:rgba(0,0,0,0.12);
+  color:#0F172A;
+}
+
+/* Tabs: Current vs Goal */
+.slim-pop-tabs{
+  display:flex;
+  gap:6px;
+  background:rgba(0,0,0,0.05);
+  padding:3px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+.slim-pop-tab{
+  flex:1;
+  padding:7px 10px;
+  border:none;
+  background:transparent;
+  border-radius:11px;
+  font-size:12px;
+  font-weight:800;
+  color:#64748B;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.slim-pop-tab.active{
+  background:#FFFFFF;
+  color:#0F172A;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* Smooth Scroll Wheel Picker */
+.scroll-wheel-container{
+  position:relative;
+  height:176px;
+  margin:4px 0 10px;
+  overflow:hidden;
+  border-radius:20px;
+  background:rgba(0,0,0,0.02);
+  border:1px solid rgba(0,0,0,0.04);
+}
+.scroll-wheel-viewport{
+  position:relative;
+  height:100%;
+  overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  scroll-behavior:smooth;
+  padding:66px 0; /* allows first & last items to align at center 44px */
+  box-sizing:border-box;
+}
+.scroll-wheel-viewport::-webkit-scrollbar{
+  display:none;
+}
+.scroll-wheel-item{
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:19px;
+  font-weight:700;
+  color:#94A3B8;
+  scroll-snap-align:center;
+  cursor:pointer;
+  user-select:none;
+  transition:color 0.15s ease, transform 0.15s ease;
+}
+.scroll-wheel-item.selected{
+  color:#0F172A;
+  font-size:24px;
+  font-weight:900;
+}
+.scroll-wheel-highlight{
+  position:absolute;
+  top:66px;
+  left:12px;
+  right:12px;
+  height:44px;
+  border-radius:13px;
+  background:rgba(255, 255, 255, 0.85);
+  border:1.5px solid rgba(0,0,0,0.09);
+  pointer-events:none;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.scroll-wheel-gradient-top{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:66px;
+  background:linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0));
+  pointer-events:none;
+  z-index:2;
+}
+.scroll-wheel-gradient-bottom{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:66px;
+  background:linear-gradient(to top, rgba(255,255,255,0.95), rgba(255,255,255,0));
+  pointer-events:none;
+  z-index:2;
+}
+
+/* Value Callout */
+.slim-pop-live-val{
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  color:#64748B;
+  margin-bottom:10px;
+}
+.slim-pop-live-val strong{
+  font-size:16px;
+  font-weight:900;
+  color:#0F172A;
+  margin-left:4px;
+}
+
+/* Presets */
+.slim-pop-presets{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:14px;
+}
+.slim-preset-chip{
+  background:rgba(0,0,0,0.04);
+  border:1.5px solid rgba(0,0,0,0.06);
+  padding:5px 11px;
+  border-radius:12px;
+  font-size:11.5px;
+  font-weight:800;
+  color:#334155;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.slim-preset-chip:hover,
+.slim-preset-chip.active{
+  background:#0F172A;
+  color:#FFFFFF;
+  border-color:#0F172A;
+}
+
+/* Actions */
+.slim-confirm-btn{
+  width:100%;
+  padding:13px;
+  border-radius:18px;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:-0.2px;
 }
 .vital-action-btn.deduct:hover{
   background:#DC2626;
@@ -1457,42 +1780,65 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
       <!-- Daily Wellness Vitals: All-in-One Square Widget with Circular Ring Graph -->
       <div class="section-title">
         Daily wellness vitals
-        <span>Tap to log</span>
+        <span onclick="openSlimVitalPicker('water')">Custom values</span>
       </div>
       <div class="vitals-square-card" id="allInOneVitalsCard">
         <div class="vitals-square-top">
           <span class="vitals-square-title">Daily Vitals Rings</span>
-          <span class="vitals-square-tag" id="vitalsStatusTag">All-in-One</span>
+          <span class="vitals-square-tag" id="vitalsStatusTag">Active Rings</span>
         </div>
 
-        <!-- Concentric Circular Rings Graph (Apple Activity Style) -->
-        <div class="vitals-ring-center">
-          <svg class="vitals-ring-svg" viewBox="0 0 180 180">
-            <!-- Background Tracks -->
-            <circle class="ring-track" cx="90" cy="90" r="72" stroke="#0284C7" stroke-width="12"/>
-            <circle class="ring-track" cx="90" cy="90" r="54" stroke="#7C3AED" stroke-width="12"/>
-            <circle class="ring-track" cx="90" cy="90" r="36" stroke="#10B981" stroke-width="12"/>
+        <!-- Concentric Circular Rings Graph & Clean Outside Score Display -->
+        <div class="vitals-ring-layout">
+          <div class="vitals-ring-center">
+            <svg class="vitals-ring-svg" viewBox="0 0 180 180">
+              <!-- Background Tracks -->
+              <circle class="ring-track" cx="90" cy="90" r="72" stroke="#0284C7" stroke-width="12"/>
+              <circle class="ring-track" cx="90" cy="90" r="54" stroke="#7C3AED" stroke-width="12"/>
+              <circle class="ring-track" cx="90" cy="90" r="36" stroke="#10B981" stroke-width="12"/>
 
-            <!-- Animated Progress Rings -->
-            <circle class="ring-progress" id="waterRing" cx="90" cy="90" r="72" stroke="#0284C7" stroke-width="12" stroke-dasharray="452.39" stroke-dashoffset="135.72"/>
-            <circle class="ring-progress" id="relaxRing" cx="90" cy="90" r="54" stroke="#7C3AED" stroke-width="12" stroke-dasharray="339.29" stroke-dashoffset="111.96"/>
-            <circle class="ring-progress" id="activityRing" cx="90" cy="90" r="36" stroke="#10B981" stroke-width="12" stroke-dasharray="226.19" stroke-dashoffset="74.64"/>
-          </svg>
-          <div class="vitals-ring-core">
-            <div class="vitals-core-score" id="vitalsCoreScore">68%</div>
-            <div class="vitals-core-sub">Vitals Goal</div>
+              <!-- Animated Progress Rings -->
+              <circle class="ring-progress" id="waterRing" cx="90" cy="90" r="72" stroke="#0284C7" stroke-width="12" stroke-dasharray="452.39" stroke-dashoffset="135.72"/>
+              <circle class="ring-progress" id="relaxRing" cx="90" cy="90" r="54" stroke="#7C3AED" stroke-width="12" stroke-dasharray="339.29" stroke-dashoffset="111.96"/>
+              <circle class="ring-progress" id="activityRing" cx="90" cy="90" r="36" stroke="#10B981" stroke-width="12" stroke-dasharray="226.19" stroke-dashoffset="74.64"/>
+            </svg>
+            <!-- Clean center: No inner text cluttering inside the rings -->
+          </div>
+
+          <!-- Outside Ring Score & Legend (Clean, Outside the Rings) -->
+          <div class="vitals-outside-score-card">
+            <div class="vitals-score-outside">
+              <span class="vitals-core-score" id="vitalsCoreScore">68%</span>
+              <span class="vitals-core-sub">Average Daily Goal</span>
+            </div>
+            <div class="vitals-outside-legend">
+              <div class="vitals-legend-pill" onclick="openSlimVitalPicker('water')">
+                <span class="legend-dot" style="background:#0284C7"></span>
+                <span>Water</span>
+              </div>
+              <div class="vitals-legend-pill" onclick="openSlimVitalPicker('relax')">
+                <span class="legend-dot" style="background:#7C3AED"></span>
+                <span>Relax</span>
+              </div>
+              <div class="vitals-legend-pill" onclick="openSlimVitalPicker('activity')">
+                <span class="legend-dot" style="background:#10B981"></span>
+                <span>Activity</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- 3 Interactive Metric Rows -->
+        <!-- 3 Interactive Metric Rows with Spacing and Tap to Set -->
         <div class="vitals-metrics-rows">
           <!-- Water Intake Row -->
           <div class="vital-row-item">
-            <div class="vital-row-info">
+            <div class="vital-row-info" onclick="openSlimVitalPicker('water')" title="Tap to set specific ml">
               <span class="vital-color-dot" style="background:#0284C7;box-shadow:0 0 6px rgba(2,132,199,0.4)"></span>
               <div class="vital-row-text">
-                Water<strong id="waterValText">1750ml</strong> <small>/ 2500ml</small>
+                <span class="vital-cat-name">Water</span>
+                <span class="vital-reading"><strong id="waterValText">1750ml</strong> <small id="waterGoalText">/ 2500ml</small></span>
               </div>
+              <span class="vital-edit-indicator">Edit</span>
             </div>
             <div class="vital-row-actions">
               <button class="vital-action-btn deduct" onclick="adjustWater(-250)">-250ml</button>
@@ -1503,11 +1849,13 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 
           <!-- Relax Time Row -->
           <div class="vital-row-item">
-            <div class="vital-row-info">
+            <div class="vital-row-info" onclick="openSlimVitalPicker('relax')" title="Tap to set specific min">
               <span class="vital-color-dot" style="background:#7C3AED;box-shadow:0 0 6px rgba(124,58,237,0.4)"></span>
               <div class="vital-row-text">
-                Relax<strong id="relaxValText">30min</strong> <small>/ 45min</small>
+                <span class="vital-cat-name">Relax</span>
+                <span class="vital-reading"><strong id="relaxValText">30min</strong> <small id="relaxGoalText">/ 45min</small></span>
               </div>
+              <span class="vital-edit-indicator">Edit</span>
             </div>
             <div class="vital-row-actions">
               <button class="vital-action-btn deduct" onclick="adjustRelax(-10)">-10 min</button>
@@ -1518,11 +1866,13 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 
           <!-- Physical Activity Row -->
           <div class="vital-row-item">
-            <div class="vital-row-info">
+            <div class="vital-row-info" onclick="openSlimVitalPicker('activity')" title="Tap to set specific min">
               <span class="vital-color-dot" style="background:#10B981;box-shadow:0 0 6px rgba(16,185,129,0.4)"></span>
               <div class="vital-row-text">
-                Activity<strong id="actValText">40min</strong> <small>/ 60min</small>
+                <span class="vital-cat-name">Activity</span>
+                <span class="vital-reading"><strong id="actValText">40min</strong> <small id="actGoalText">/ 60min</small></span>
               </div>
+              <span class="vital-edit-indicator">Edit</span>
             </div>
             <div class="vital-row-actions">
               <button class="vital-action-btn deduct" onclick="adjustActivity(-15)">-15 min</button>
@@ -1709,6 +2059,52 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Slim Popup: Smooth Scroll Wheel Picker with Blur Effect -->
+  <div class="slim-pop-backdrop" id="slimVitalPickerModal" onclick="handleSlimBackdropClick(event)">
+    <div class="slim-pop-sheet" id="slimVitalSheet">
+      <div class="slim-pop-handle"></div>
+      <div class="slim-pop-header">
+        <div class="slim-pop-title-wrap">
+          <span class="slim-pop-dot" id="slimPopDot"></span>
+          <div>
+            <h3 class="slim-pop-title" id="slimPopTitle">Set Water Intake</h3>
+            <p class="slim-pop-desc" id="slimPopDesc">Scroll smoothly or tap presets</p>
+          </div>
+        </div>
+        <button class="slim-pop-close" onclick="closeSlimVitalPicker()">&times;</button>
+      </div>
+
+      <!-- Current vs Goal Tab Switcher -->
+      <div class="slim-pop-tabs">
+        <button class="slim-pop-tab active" id="tabCurrentVal" onclick="switchSlimPickerTab('current')">Current Value</button>
+        <button class="slim-pop-tab" id="tabGoalVal" onclick="switchSlimPickerTab('goal')">Daily Goal</button>
+      </div>
+
+      <!-- Smooth Scroll Wheel Picker with Gradient Blur Masks -->
+      <div class="scroll-wheel-container">
+        <div class="scroll-wheel-gradient-top"></div>
+        <div class="scroll-wheel-highlight"></div>
+        <div class="scroll-wheel-gradient-bottom"></div>
+        <div class="scroll-wheel-viewport" id="scrollWheelViewport" onscroll="handleWheelScroll()">
+          <!-- Wheel options generated dynamically -->
+        </div>
+      </div>
+
+      <!-- Live Selection Value Display -->
+      <div class="slim-pop-live-val">
+        Selected: <strong id="slimLiveValText">1750 ml</strong>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div class="slim-pop-presets" id="slimPopPresets"></div>
+
+      <!-- Action Button -->
+      <div class="slim-pop-actions">
+        <button class="primary-btn slim-confirm-btn" onclick="confirmSlimVitalValue()">Set Value</button>
+      </div>
     </div>
   </div>
 
