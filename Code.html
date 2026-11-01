@@ -848,142 +848,123 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 }
 
 /* ============================================================
-   DAILY VITALS CARDS (WATER, RELAX, PHYSICAL ACTIVITY)
+   APPLE WIDGET-STYLE DAILY WELLNESS VITALS CARDS
    ============================================================ */
 .vitals-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-  margin-bottom:20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-bottom:24px;
 }
-.vital-card{
-  border-radius:24px;
-  padding:16px 18px;
-  box-shadow:var(--soft-shadow);
-  transition:transform .18s ease, box-shadow .18s ease;
+.widget-stat-card{
+  border-radius:28px;
+  padding:20px 22px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.03);
+  transition:transform .2s cubic-bezier(0.16,1,0.3,1), box-shadow .2s ease;
   position:relative;
-  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
-.vital-card:hover{
+.widget-stat-card:hover{
   transform:translateY(-2px);
-  box-shadow:var(--float-shadow);
+  box-shadow:0 12px 32px rgba(0,0,0,0.06);
 }
-.vital-card.water{
-  background:#EBF5FE;
-  border:1.5px solid #BAE6FD;
+.widget-stat-card.water{
+  background:#DDF2FD; /* Apple Health Sky Blue */
 }
-.vital-card.relax{
-  background:#F5F3FF;
-  border:1.5px solid #DDD6FE;
+.widget-stat-card.relax{
+  background:#EDE9FE; /* Apple Health Lavender/Violet */
 }
-.vital-card.activity{
-  background:#ECFDF5;
-  border:1.5px solid #A7F3D0;
+.widget-stat-card.activity{
+  background:#DCFCE7; /* Apple Health Mint/Sage */
 }
-.vital-card-top{
+.widget-stat-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:10px;
 }
-.vital-card-header{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-.vital-icon-wrap{
-  width:32px;
-  height:32px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-}
-.vital-card.water .vital-icon-wrap{
-  background:#E0F2FE;
-  color:#0284C7;
-}
-.vital-card.relax .vital-icon-wrap{
-  background:#EDE9FE;
-  color:#7C3AED;
-}
-.vital-card.activity .vital-icon-wrap{
-  background:#D1FAE5;
-  color:#10B981;
-}
-.vital-label{
-  font-size:12.5px;
+.widget-stat-title{
+  font-size:14.5px;
   font-weight:800;
-  letter-spacing:-.2px;
-  color:#1E293B;
+  color:#111;
+  letter-spacing:-.3px;
 }
-.vital-goal-badge{
-  font-size:10px;
-  font-weight:800;
-  padding:3px 8px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.75);
-  color:#64748B;
+.widget-stat-goal{
+  font-size:11.5px;
+  font-weight:700;
+  color:#5A5463;
 }
-.vital-main-row{
+.widget-capsule-bars{
+  height:56px;
   display:flex;
-  justify-content:space-between;
   align-items:flex-end;
-  margin-bottom:10px;
+  gap:8px;
+  margin:18px 0 16px;
 }
-.vital-val-large{
-  font-size:24px;
+.widget-capsule-bars i{
+  flex:1;
+  border-radius:999px; /* Complete capsule roundness like in image */
+  min-height:12px;
+  transition:height .35s cubic-bezier(0.16,1,0.3,1), transform .2s ease;
+}
+.widget-stat-card.water .widget-capsule-bars i{
+  background:#0284C7; /* Apple Health Ocean Blue */
+}
+.widget-stat-card.relax .widget-capsule-bars i{
+  background:#7C3AED; /* Apple Health Deep Violet */
+}
+.widget-stat-card.activity .widget-capsule-bars i{
+  background:#10B981; /* Apple Health Emerald Green */
+}
+
+/* Bottom Value & Quick Action Buttons */
+.widget-stat-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.widget-stat-val{
+  font-size:26px;
   font-weight:900;
-  letter-spacing:-.5px;
-  color:#0F172A;
+  letter-spacing:-1px;
+  color:#111;
   line-height:1;
 }
-.vital-val-large small{
-  font-size:12px;
+.widget-stat-val small{
+  font-size:13px;
   font-weight:700;
-  color:#64748B;
-  margin-left:3px;
+  margin-left:2px;
+  color:#111;
 }
-.vital-quick-btns{
+.widget-stat-btns{
   display:flex;
+  align-items:center;
   gap:6px;
 }
-.vital-btn{
-  background:#FFFFFF;
-  border-radius:12px;
-  padding:6px 11px;
+.widget-pill-btn{
+  background:rgba(255, 255, 255, 0.85);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:none;
+  padding:7px 11px;
+  border-radius:14px;
   font-size:11px;
   font-weight:800;
-  color:#1E293B;
-  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  color:#161616;
+  box-shadow:0 2px 6px rgba(0,0,0,0.04);
   cursor:pointer;
-  transition:all .15s ease;
-  border:none;
+  transition:all .15s cubic-bezier(0.16,1,0.3,1);
 }
-.vital-btn:hover{
-  background:#0F172A;
+.widget-pill-btn:hover{
+  background:#161616;
   color:#FFFFFF;
-  transform:scale(1.04);
+  transform:scale(1.05);
 }
-.vital-progress-track{
-  height:8px;
-  background:rgba(0,0,0,0.06);
-  border-radius:10px;
-  overflow:hidden;
-  position:relative;
-}
-.vital-progress-fill{
-  height:100%;
-  border-radius:10px;
-  transition:width .3s ease;
-}
-.vital-card.water .vital-progress-fill{
-  background:linear-gradient(90deg, #38BDF8, #0284C7);
-}
-.vital-card.relax .vital-progress-fill{
-  background:linear-gradient(90deg, #A78BFA, #7C3AED);
-}
-.vital-card.activity .vital-progress-fill{
-  background:linear-gradient(90deg, #34D399, #10B981);
+.widget-pill-btn:active{
+  transform:scale(0.95);
 }
 
 /* Stress Indicator Dot */
@@ -1334,92 +1315,64 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
         </div>
       </div>
 
-      <!-- Daily Wellness Vitals: Water Level, Relax Time, Physical Activity Time -->
+      <!-- Daily Wellness Vitals: Apple-Widget Style Cards with Rounded Capsule Bar Graphs -->
       <div class="section-title">
         Daily wellness vitals
         <span>Tap to log</span>
       </div>
       <div class="vitals-grid">
-        <!-- 1. Water Level Card -->
-        <div class="vital-card water" id="waterCard">
-          <div class="vital-card-top">
-            <div class="vital-card-header">
-              <div class="vital-icon-wrap">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                </svg>
-              </div>
-              <span class="vital-label">Water Intake</span>
-            </div>
-            <span class="vital-goal-badge" id="waterGoalBadge">Goal: 2500 ml</span>
+        <!-- 1. Water Intake Widget Card -->
+        <div class="widget-stat-card water" id="waterCard">
+          <div class="widget-stat-top">
+            <span class="widget-stat-title">Water Intake</span>
+            <span class="widget-stat-goal" id="waterGoalText">Goal: 2500 ml</span>
           </div>
-          <div class="vital-main-row">
-            <div class="vital-val-large">
-              <span id="waterValue">1750</span><small>ml</small>
-            </div>
-            <div class="vital-quick-btns">
-              <button class="vital-btn" onclick="adjustWater(-250)">-250</button>
-              <button class="vital-btn" onclick="adjustWater(250)">+250ml</button>
-              <button class="vital-btn" onclick="adjustWater(500)">+500ml</button>
-            </div>
+          <div class="widget-capsule-bars" id="waterBars">
+            <i style="height:65%"></i><i style="height:85%"></i><i style="height:55%"></i><i style="height:75%"></i><i style="height:95%"></i><i style="height:60%"></i><i style="height:80%"></i><i style="height:70%"></i>
           </div>
-          <div class="vital-progress-track">
-            <div class="vital-progress-fill" id="waterProgressFill" style="width:70%"></div>
+          <div class="widget-stat-bottom">
+            <div class="widget-stat-val" id="waterValueDisplay">3500<small>ml</small></div>
+            <div class="widget-stat-btns">
+              <button class="widget-pill-btn" onclick="adjustWater(-250)">-250</button>
+              <button class="widget-pill-btn" onclick="adjustWater(250)">+250ml</button>
+              <button class="widget-pill-btn" onclick="adjustWater(500)">+500ml</button>
+            </div>
           </div>
         </div>
 
-        <!-- 2. Relax Time Card -->
-        <div class="vital-card relax" id="relaxCard">
-          <div class="vital-card-top">
-            <div class="vital-card-header">
-              <div class="vital-icon-wrap">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="9"/>
-                  <path d="M12 7v5l3 3"/>
-                </svg>
-              </div>
-              <span class="vital-label">Relax Time</span>
-            </div>
-            <span class="vital-goal-badge">Goal: 45 min</span>
+        <!-- 2. Relax Time Widget Card -->
+        <div class="widget-stat-card relax" id="relaxCard">
+          <div class="widget-stat-top">
+            <span class="widget-stat-title">Relax Time</span>
+            <span class="widget-stat-goal" id="relaxGoalText">Goal: 45 min</span>
           </div>
-          <div class="vital-main-row">
-            <div class="vital-val-large">
-              <span id="relaxValue">35</span><small>min</small>
-            </div>
-            <div class="vital-quick-btns">
-              <button class="vital-btn" onclick="adjustRelax(10)">+10 min</button>
-              <button class="vital-btn" onclick="adjustRelax(15)">+15 min</button>
-            </div>
+          <div class="widget-capsule-bars" id="relaxBars">
+            <i style="height:45%"></i><i style="height:60%"></i><i style="height:75%"></i><i style="height:90%"></i><i style="height:70%"></i><i style="height:85%"></i><i style="height:95%"></i><i style="height:80%"></i>
           </div>
-          <div class="vital-progress-track">
-            <div class="vital-progress-fill" id="relaxProgressFill" style="width:77%"></div>
+          <div class="widget-stat-bottom">
+            <div class="widget-stat-val" id="relaxValueDisplay">75<small>min</small></div>
+            <div class="widget-stat-btns">
+              <button class="widget-pill-btn" onclick="adjustRelax(10)">+10 min</button>
+              <button class="widget-pill-btn" onclick="adjustRelax(15)">+15 min</button>
+            </div>
           </div>
         </div>
 
-        <!-- 3. Physical Activity Time Card -->
-        <div class="vital-card activity" id="activityCard">
-          <div class="vital-card-top">
-            <div class="vital-card-header">
-              <div class="vital-icon-wrap">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-              </div>
-              <span class="vital-label">Physical Activity</span>
-            </div>
-            <span class="vital-goal-badge">Goal: 60 min</span>
+        <!-- 3. Physical Activity Widget Card -->
+        <div class="widget-stat-card activity" id="activityCard">
+          <div class="widget-stat-top">
+            <span class="widget-stat-title">Physical Activity</span>
+            <span class="widget-stat-goal" id="activityGoalText">Goal: 60 min</span>
           </div>
-          <div class="vital-main-row">
-            <div class="vital-val-large">
-              <span id="activityValue">45</span><small>min</small>
-            </div>
-            <div class="vital-quick-btns">
-              <button class="vital-btn" onclick="adjustActivity(15)">+15 min</button>
-              <button class="vital-btn" onclick="adjustActivity(30)">+30 min</button>
-            </div>
+          <div class="widget-capsule-bars" id="activityBars">
+            <i style="height:40%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:75%"></i>
           </div>
-          <div class="vital-progress-track">
-            <div class="vital-progress-fill" id="activityProgressFill" style="width:75%"></div>
+          <div class="widget-stat-bottom">
+            <div class="widget-stat-val" id="activityValueDisplay">45<small>min</small></div>
+            <div class="widget-stat-btns">
+              <button class="widget-pill-btn" onclick="adjustActivity(15)">+15 min</button>
+              <button class="widget-pill-btn" onclick="adjustActivity(30)">+30 min</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1706,9 +1659,9 @@ let wellnessMetrics = {
   sleep: '7h 20min',
   stressScore: 38,
   stressLevel: 'Calm',
-  waterLevel: 1750,
+  waterLevel: 3500,
   waterGoal: 2500,
-  relaxMinutes: 35,
+  relaxMinutes: 75,
   relaxGoal: 45,
   activityMinutes: 45,
   activityGoal: 60,
@@ -2341,17 +2294,16 @@ function saveSleepDuration() {
    10. DAILY VITALS LOGIC (WATER, RELAX, PHYSICAL ACTIVITY)
    ============================================================ */
 function adjustWater(amount) {
-  const current = wellnessMetrics.waterLevel || 1750;
-  const goal = wellnessMetrics.waterGoal || 2500;
-  wellnessMetrics.waterLevel = Math.max(0, Math.min(4000, current + amount));
+  const current = wellnessMetrics.waterLevel || 3500;
+  wellnessMetrics.waterLevel = Math.max(0, Math.min(5000, current + amount));
   saveStorage();
   syncVitalsUI();
   showCustomToast(amount > 0 ? `+${amount}ml water logged` : `${amount}ml water adjusted`);
 }
 
 function adjustRelax(amount) {
-  const current = wellnessMetrics.relaxMinutes || 35;
-  wellnessMetrics.relaxMinutes = Math.max(0, Math.min(180, current + amount));
+  const current = wellnessMetrics.relaxMinutes || 75;
+  wellnessMetrics.relaxMinutes = Math.max(0, Math.min(240, current + amount));
   saveStorage();
   syncVitalsUI();
   showCustomToast(`+${amount} min relax logged`);
@@ -2359,7 +2311,7 @@ function adjustRelax(amount) {
 
 function adjustActivity(amount) {
   const current = wellnessMetrics.activityMinutes || 45;
-  wellnessMetrics.activityMinutes = Math.max(0, Math.min(240, current + amount));
+  wellnessMetrics.activityMinutes = Math.max(0, Math.min(300, current + amount));
   wellnessMetrics.activity = `${wellnessMetrics.activityMinutes} min`;
   saveStorage();
   syncVitalsUI();
@@ -2368,26 +2320,53 @@ function adjustActivity(amount) {
 }
 
 function syncVitalsUI() {
-  const water = wellnessMetrics.waterLevel || 1750;
+  const water = wellnessMetrics.waterLevel || 3500;
   const waterGoal = wellnessMetrics.waterGoal || 2500;
-  const wVal = document.getElementById('waterValue');
-  if (wVal) wVal.textContent = water;
-  const wFill = document.getElementById('waterProgressFill');
-  if (wFill) wFill.style.width = `${Math.min(100, Math.round((water / waterGoal) * 100))}%`;
+  const wEl = document.getElementById('waterValueDisplay');
+  if (wEl) wEl.innerHTML = `${water}<small>ml</small>`;
+  const wGoalEl = document.getElementById('waterGoalText');
+  if (wGoalEl) wGoalEl.textContent = `Goal: ${waterGoal} ml`;
 
-  const relax = wellnessMetrics.relaxMinutes || 35;
+  // Scale water capsule bars dynamically based on goal ratio
+  const waterRatio = Math.min(1.4, Math.max(0.25, water / waterGoal));
+  const baseWaterHeights = [52, 74, 46, 68, 95, 54, 78, 66];
+  const wBars = document.querySelectorAll('#waterBars i');
+  wBars.forEach((bar, idx) => {
+    const h = Math.min(100, Math.max(14, Math.round(baseWaterHeights[idx] * waterRatio)));
+    bar.style.height = `${h}%`;
+  });
+
+  const relax = wellnessMetrics.relaxMinutes || 75;
   const relaxGoal = wellnessMetrics.relaxGoal || 45;
-  const rVal = document.getElementById('relaxValue');
-  if (rVal) rVal.textContent = relax;
-  const rFill = document.getElementById('relaxProgressFill');
-  if (rFill) rFill.style.width = `${Math.min(100, Math.round((relax / relaxGoal) * 100))}%`;
+  const rEl = document.getElementById('relaxValueDisplay');
+  if (rEl) rEl.innerHTML = `${relax}<small>min</small>`;
+  const rGoalEl = document.getElementById('relaxGoalText');
+  if (rGoalEl) rGoalEl.textContent = `Goal: ${relaxGoal} min`;
+
+  // Scale relax capsule bars dynamically
+  const relaxRatio = Math.min(1.4, Math.max(0.25, relax / relaxGoal));
+  const baseRelaxHeights = [44, 58, 72, 88, 68, 84, 96, 76];
+  const rBars = document.querySelectorAll('#relaxBars i');
+  rBars.forEach((bar, idx) => {
+    const h = Math.min(100, Math.max(14, Math.round(baseRelaxHeights[idx] * relaxRatio)));
+    bar.style.height = `${h}%`;
+  });
 
   const act = wellnessMetrics.activityMinutes || 45;
   const actGoal = wellnessMetrics.activityGoal || 60;
-  const aVal = document.getElementById('activityValue');
-  if (aVal) aVal.textContent = act;
-  const aFill = document.getElementById('activityProgressFill');
-  if (aFill) aFill.style.width = `${Math.min(100, Math.round((act / actGoal) * 100))}%`;
+  const aEl = document.getElementById('activityValueDisplay');
+  if (aEl) aEl.innerHTML = `${act}<small>min</small>`;
+  const aGoalEl = document.getElementById('activityGoalText');
+  if (aGoalEl) aGoalEl.textContent = `Goal: ${actGoal} min`;
+
+  // Scale activity capsule bars dynamically
+  const actRatio = Math.min(1.4, Math.max(0.25, act / actGoal));
+  const baseActHeights = [42, 56, 68, 58, 84, 64, 52, 72];
+  const aBars = document.querySelectorAll('#activityBars i');
+  aBars.forEach((bar, idx) => {
+    const h = Math.min(100, Math.max(14, Math.round(baseActHeights[idx] * actRatio)));
+    bar.style.height = `${h}%`;
+  });
 }
 
 /* ============================================================
