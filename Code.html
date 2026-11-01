@@ -5,8 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#EDE7F1">
 <title>Mooda — Mood & Wellness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.coiny-regular {
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
 :root{
   --green:#A7F58A;
   --purple:#D7A5F2;
@@ -55,22 +64,22 @@ button:active{transform:scale(.95)}
   flex-direction:column;
 }
 
-/* Status Bar */
+/* Status Bar - Clean & Simple (No dynamic island, no carrier/battery icons) */
 .status{
-  height:38px;
+  height:36px;
   flex-shrink:0;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:0 26px;
+  padding:0 24px;
   font-size:12px;
   font-weight:700;
   background:transparent;
   z-index:15;
   user-select:none;
 }
-.pill{width:88px;height:22px;background:#181818;border-radius:30px;margin:0 auto}
-.status-right{display:flex;gap:6px;align-items:center}
+.status-time{font-size:13px;font-weight:800;color:var(--black);letter-spacing:-.2px}
+.status-tag{font-size:11px;font-weight:800;color:#8E8994;letter-spacing:.3px}
 
 /* Content Area */
 .content{
@@ -302,7 +311,15 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 
 /* Big Cheerful Onboarding */
 #onboarding{padding:8px 4px}
-.welcome-title{font-size:42px;letter-spacing:-2.5px;line-height:1.08;text-align:center;margin:10px 0 18px;font-weight:900}
+.welcome-title{
+  font-family:"Coiny",Inter,system-ui;
+  font-size:38px;
+  letter-spacing:-0.5px;
+  line-height:1.15;
+  text-align:center;
+  margin:10px 0 18px;
+  font-weight:400;
+}
 .cta{
   display:flex;
   align-items:center;
@@ -497,6 +514,658 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 }
 .tag-pill.active{background:var(--yellow);box-shadow:0 4px 10px rgba(0,0,0,0.08);transform:scale(1.03)}
 
+/* ============================================================
+   SLIDE TO GET STARTED WITH GREEN EFFECT & CIRCULAR TRANSITION
+   ============================================================ */
+.slide-start-container{
+  margin:16px auto 14px;
+  width:100%;
+  max-width:330px;
+  position:relative;
+}
+.slide-track{
+  position:relative;
+  height:58px;
+  background:#FFFFFF;
+  border-radius:36px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.06), inset 0 1px 2px rgba(0,0,0,0.02);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  user-select:none;
+  touch-action:none;
+  cursor:pointer;
+  border:1.5px solid rgba(167, 245, 138, 0.45);
+}
+.slide-green-fill{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  width:0;
+  background:linear-gradient(90deg, #A7F58A, #72DF4E);
+  box-shadow:0 0 24px rgba(167, 245, 138, 0.9);
+  border-radius:36px;
+  pointer-events:none;
+  transition:width 0.04s linear;
+}
+.slide-track-text{
+  position:relative;
+  z-index:2;
+  font-size:13.5px;
+  font-weight:800;
+  color:#1a1a1a;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  letter-spacing:-0.2px;
+  pointer-events:none;
+  transition:opacity 0.2s ease;
+}
+.slide-arrows{
+  color:#439824;
+  font-size:16px;
+  font-weight:900;
+  animation:slideArrowsPulse 1.3s ease-in-out infinite;
+}
+@keyframes slideArrowsPulse{
+  0%,100%{transform:translateX(0);opacity:0.4;}
+  50%{transform:translateX(4px);opacity:1;}
+}
+.slide-thumb{
+  position:absolute;
+  left:4px;
+  top:4px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:#161616;
+  color:#FFFFFF;
+  display:grid;
+  place-items:center;
+  z-index:3;
+  cursor:grab;
+  box-shadow:0 4px 14px rgba(0,0,0,0.24);
+  transition:background .2s ease, box-shadow .2s ease;
+  user-select:none;
+}
+.slide-thumb:active, .slide-thumb.dragging{
+  cursor:grabbing;
+}
+.slide-thumb.completed{
+  background:#111;
+  box-shadow:0 0 18px rgba(167, 245, 138, 0.95);
+}
+.circle-transition-overlay{
+  position:absolute;
+  inset:0;
+  border-radius:44px;
+  background:radial-gradient(circle at center, #A7F58A 0%, #75e652 60%, #52cb28 100%);
+  z-index:200;
+  pointer-events:none;
+  clip-path:circle(0% at 50% 50%);
+  opacity:0;
+  transition:clip-path 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+.circle-transition-overlay.expanding{
+  opacity:1;
+  clip-path:circle(160% at 50% 50%);
+}
+
+/* ============================================================
+   PLAYFUL QUIZ & INSTANT INSIGHTS STYLES
+   ============================================================ */
+.quiz{
+  border-radius:26px;
+  padding:18px;
+  background:#FFFFFF;
+  box-shadow:var(--soft-shadow);
+  border:1.5px solid rgba(215, 165, 242, 0.3);
+  position:relative;
+  overflow:hidden;
+}
+.quiz-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:11px;
+  font-weight:800;
+}
+.quiz-badge{
+  background:#FAF0FE;
+  color:#9A61B5;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+}
+.quiz-progress-bar{
+  height:6px;
+  background:#F1EDF5;
+  border-radius:10px;
+  margin:10px 0 6px;
+  overflow:hidden;
+}
+.quiz-progress-fill{
+  height:100%;
+  width:20%;
+  background:linear-gradient(90deg, var(--green), var(--purple));
+  border-radius:10px;
+  transition:width .3s ease;
+}
+.quiz-live-feedback{
+  font-size:12px;
+  font-weight:700;
+  color:#2D6B1D;
+  background:#EEFCE9;
+  border-radius:14px;
+  padding:7px 12px;
+  margin:10px 0 8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  animation:softAppear .2s ease;
+}
+.quiz-question{
+  margin:12px 0 16px;
+  font-size:15px;
+  font-weight:800;
+  line-height:1.38;
+  color:var(--black);
+}
+.quiz-buttons{
+  display:flex;
+  gap:10px;
+}
+.quiz-btn{
+  flex:1;
+  padding:13px;
+  border-radius:18px;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .15s ease, background .15s ease;
+}
+.quiz-btn.yes{
+  background:#181818;
+  color:white;
+  box-shadow:0 4px 14px rgba(0,0,0,0.14);
+}
+.quiz-btn.yes:hover{background:#2b2b2b}
+.quiz-btn.no{
+  background:#F4F1F6;
+  color:#555;
+}
+.quiz-btn.no:hover{background:#EAE5ED}
+
+/* Quiz Playful Analysis Card */
+.quiz-analysis-wrap{
+  animation:softAppear .28s ease;
+}
+.quiz-hero-badge{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  background:#FAF8FC;
+  border-radius:20px;
+  margin-bottom:12px;
+  border:1px dashed rgba(215, 165, 242, 0.7);
+}
+.quiz-hero-emoji{
+  font-size:36px;
+  line-height:1;
+}
+.quiz-hero-name{
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:-.3px;
+}
+.quiz-hero-score{
+  font-size:11px;
+  font-weight:700;
+  color:#8E8994;
+}
+.quiz-analysis-quote{
+  font-size:12.5px;
+  line-height:1.5;
+  color:#3a383d;
+  margin-bottom:12px;
+  font-weight:600;
+}
+.quiz-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:14px;
+}
+.quiz-pill-tag{
+  font-size:10.5px;
+  font-weight:800;
+  padding:4px 10px;
+  border-radius:12px;
+}
+.quiz-pill-tag.green{background:#D8FBD0;color:#2D6B1D}
+.quiz-pill-tag.purple{background:#F1DEF9;color:#7B3E99}
+.quiz-pill-tag.yellow{background:#FFF2C2;color:#8F690B}
+.quiz-actions-row{
+  display:flex;
+  gap:8px;
+}
+.quiz-action-add{
+  flex:2;
+  padding:12px 14px;
+  background:#141414;
+  color:#FFFFFF;
+  border-radius:16px;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:0 4px 14px rgba(0,0,0,0.12);
+  transition:background .2s ease;
+}
+.quiz-action-add.saved{
+  background:#28a745;
+}
+.quiz-action-retake{
+  flex:1;
+  padding:12px 8px;
+  background:#F4F1F6;
+  color:#333;
+  border-radius:16px;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  border:none;
+}
+
+/* ============================================================
+   INSTANT INSIGHTS GRAPH STYLES
+   ============================================================ */
+.insights-graph-box{
+  background:#FAF8FC;
+  border-radius:22px;
+  padding:15px;
+  margin:14px 0 12px;
+  border:1px solid #ECE6F3;
+}
+.insights-graph-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.insights-graph-title{
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  color:#736F78;
+}
+.insights-harmony-score{
+  font-size:11px;
+  font-weight:900;
+  color:#7C3AED;
+  background:#F5EEFD;
+  padding:3px 9px;
+  border-radius:10px;
+}
+.insights-bars{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.insight-bar-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.insight-bar-label{
+  width:90px;
+  font-size:11px;
+  font-weight:700;
+  color:#333;
+  white-space:nowrap;
+}
+.insight-bar-track{
+  flex:1;
+  height:9px;
+  background:#EAE5F0;
+  border-radius:10px;
+  overflow:hidden;
+}
+.insight-bar-fill{
+  height:100%;
+  border-radius:10px;
+  transition:width .5s cubic-bezier(.16,1,.3,1);
+}
+.insight-bar-pct{
+  width:34px;
+  text-align:right;
+  font-size:11px;
+  font-weight:800;
+  color:#444;
+}
+
+/* ============================================================
+   DAILY VITALS CARDS (WATER, RELAX, PHYSICAL ACTIVITY)
+   ============================================================ */
+.vitals-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-bottom:20px;
+}
+.vital-card{
+  border-radius:24px;
+  padding:16px 18px;
+  box-shadow:var(--soft-shadow);
+  transition:transform .18s ease, box-shadow .18s ease;
+  position:relative;
+  overflow:hidden;
+}
+.vital-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--float-shadow);
+}
+.vital-card.water{
+  background:#EBF5FE;
+  border:1.5px solid #BAE6FD;
+}
+.vital-card.relax{
+  background:#F5F3FF;
+  border:1.5px solid #DDD6FE;
+}
+.vital-card.activity{
+  background:#ECFDF5;
+  border:1.5px solid #A7F3D0;
+}
+.vital-card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.vital-card-header{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.vital-icon-wrap{
+  width:32px;
+  height:32px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+}
+.vital-card.water .vital-icon-wrap{
+  background:#E0F2FE;
+  color:#0284C7;
+}
+.vital-card.relax .vital-icon-wrap{
+  background:#EDE9FE;
+  color:#7C3AED;
+}
+.vital-card.activity .vital-icon-wrap{
+  background:#D1FAE5;
+  color:#10B981;
+}
+.vital-label{
+  font-size:12.5px;
+  font-weight:800;
+  letter-spacing:-.2px;
+  color:#1E293B;
+}
+.vital-goal-badge{
+  font-size:10px;
+  font-weight:800;
+  padding:3px 8px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.75);
+  color:#64748B;
+}
+.vital-main-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:10px;
+}
+.vital-val-large{
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:-.5px;
+  color:#0F172A;
+  line-height:1;
+}
+.vital-val-large small{
+  font-size:12px;
+  font-weight:700;
+  color:#64748B;
+  margin-left:3px;
+}
+.vital-quick-btns{
+  display:flex;
+  gap:6px;
+}
+.vital-btn{
+  background:#FFFFFF;
+  border-radius:12px;
+  padding:6px 11px;
+  font-size:11px;
+  font-weight:800;
+  color:#1E293B;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  cursor:pointer;
+  transition:all .15s ease;
+  border:none;
+}
+.vital-btn:hover{
+  background:#0F172A;
+  color:#FFFFFF;
+  transform:scale(1.04);
+}
+.vital-progress-track{
+  height:8px;
+  background:rgba(0,0,0,0.06);
+  border-radius:10px;
+  overflow:hidden;
+  position:relative;
+}
+.vital-progress-fill{
+  height:100%;
+  border-radius:10px;
+  transition:width .3s ease;
+}
+.vital-card.water .vital-progress-fill{
+  background:linear-gradient(90deg, #38BDF8, #0284C7);
+}
+.vital-card.relax .vital-progress-fill{
+  background:linear-gradient(90deg, #A78BFA, #7C3AED);
+}
+.vital-card.activity .vital-progress-fill{
+  background:linear-gradient(90deg, #34D399, #10B981);
+}
+
+/* Stress Indicator Dot */
+.stress-indicator-dot{
+  display:inline-block;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#9A61B5;
+  box-shadow:0 0 8px rgba(154, 97, 181, 0.4);
+  transition:all .2s ease;
+}
+
+/* ============================================================
+   DAILY REFLECTION & MY NOTES STYLES
+   ============================================================ */
+.reflection-card{
+  border:1.5px solid rgba(255, 216, 79, 0.4);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.reflection-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--float-shadow);
+}
+.reflection-chip{
+  font-size:10px;
+  font-weight:800;
+  padding:3px 9px;
+  border-radius:10px;
+  background:#FFF6D6;
+  color:#8C690E;
+}
+.reflection-footer{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dashed #F0EDF3;
+}
+.view-notes-link{
+  font-size:11px;
+  font-weight:800;
+  color:#9A61B5;
+  cursor:pointer;
+}
+.view-notes-link:hover{text-decoration:underline}
+
+/* My Notes Screen */
+.notes-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+.new-note-btn{
+  background:#161616;
+  color:white;
+  padding:9px 16px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:var(--soft-shadow);
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.notes-search-wrap{
+  margin-bottom:12px;
+}
+.notes-search-input{
+  width:100%;
+  padding:12px 16px;
+  background:#FFFFFF;
+  border-radius:18px;
+  box-shadow:var(--soft-shadow);
+  font-size:12.5px;
+  font-weight:600;
+  color:#111;
+  border:1px solid rgba(0,0,0,0.04);
+}
+.notes-filter-pills{
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:2px 2px 14px;
+}
+.notes-filter-pills::-webkit-scrollbar{display:none}
+.filter-chip{
+  padding:6px 13px;
+  border-radius:16px;
+  font-size:11px;
+  font-weight:800;
+  background:#FFFFFF;
+  color:#736F78;
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow:var(--soft-shadow);
+  transition:all .16s ease;
+}
+.filter-chip.active{
+  background:#161616;
+  color:#FFFFFF;
+  transform:scale(1.04);
+}
+.notes-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.note-item-card{
+  background:#FFFFFF;
+  border-radius:22px;
+  padding:16px 18px;
+  box-shadow:var(--soft-shadow);
+  border-left:5px solid var(--purple);
+  transition:transform .18s ease;
+  position:relative;
+}
+.note-item-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--float-shadow);
+}
+.note-card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+.note-card-date{
+  font-size:10.5px;
+  font-weight:700;
+  color:#8E8994;
+}
+.note-mood-badge{
+  font-size:10px;
+  font-weight:800;
+  padding:3px 8px;
+  border-radius:10px;
+}
+.note-card-title{
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:-.3px;
+  color:#111;
+  margin-bottom:6px;
+}
+.note-card-snippet{
+  font-size:12px;
+  line-height:1.5;
+  color:#615C67;
+  white-space:pre-wrap;
+}
+.note-card-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dashed #F2EFF5;
+}
+.note-action-btn{
+  background:transparent;
+  font-size:11px;
+  font-weight:700;
+  color:#8E8994;
+  cursor:pointer;
+  padding:3px 8px;
+  border-radius:8px;
+}
+.note-action-btn:hover{color:#111;background:#F6F4F8}
+.note-action-btn.del:hover{color:#E64949}
+.notes-empty{
+  text-align:center;
+  padding:40px 20px;
+  color:#8E8994;
+}
+.notes-empty-icon{
+  font-size:40px;
+  margin-bottom:8px;
+}
+
 /* Mobile Responsive */
 @media(max-width:480px){
   body{padding:0;background:white}
@@ -519,24 +1188,38 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 <body>
 
 <div class="app">
-  <!-- Status Bar -->
+  <!-- Circular expansion page transition overlay -->
+  <div class="circle-transition-overlay" id="circleTransition"></div>
+
+  <!-- Clean Minimal Status Bar (No dynamic island, no carrier/battery icons) -->
   <div class="status">
-    <span id="statusBarClock">09:41</span>
-    <div class="pill"></div>
-    <div class="status-right">
-      <span>LTE</span>
-      <span>◕</span>
-      <span>▰</span>
-    </div>
+    <span class="status-time" id="statusBarClock">09:41</span>
+    <span class="status-tag">Moody</span>
   </div>
 
   <!-- Content Screens -->
   <main class="content">
 
-    <!-- 1. ONBOARDING SCREEN -->
+    <!-- 1. ONBOARDING / GET STARTED SCREEN -->
     <section class="screen active" id="onboarding">
-      <h1 class="welcome-title">Not Sure<br>About Your<br>Mood?</h1>
-      <button class="cta" onclick="checkAuthAndProceed()">Let Us Help! <span>→</span></button>
+      <h1 class="welcome-title coiny-regular">Not Sure<br>About Your<br>Mood?</h1>
+
+      <!-- Tactile Slide to Get Started with Glowing Green Effect -->
+      <div class="slide-start-container">
+        <div class="slide-track" id="slideTrack">
+          <div class="slide-green-fill" id="slideGreenFill"></div>
+          <div class="slide-track-text" id="slideTrackText">
+            <span>Slide to get started</span>
+            <span class="slide-arrows">›››</span>
+          </div>
+          <div class="slide-thumb" id="slideThumb">
+            <svg id="slideThumbIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
       <div class="character-stage" id="characters"></div>
     </section>
 
@@ -581,7 +1264,9 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
             <div class="name" id="headerName">Alex Miller</div>
           </div>
         </div>
-        <button class="menu" onclick="navigate('more')">☰</button>
+        <button class="menu" onclick="navigate('more')" aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        </button>
       </header>
 
       <div class="date" id="todayDate"></div>
@@ -595,12 +1280,12 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
 
       <div class="section-title">
         Your wellness today
-        <span onclick="openWellnessEditor('sleep')">✎ Edit sleep</span>
+        <span onclick="openWellnessEditor('sleep')">Edit sleep</span>
       </div>
       <div class="analytics">
         <!-- Sleep Card -->
         <div class="stat-card orange" onclick="openWellnessEditor('sleep')">
-          <div class="stat-label"><span>▰ Sleep Duration</span><em>Tap to edit</em></div>
+          <div class="stat-label"><span>Sleep Duration</span><em>Tap to edit</em></div>
           <div class="bars" id="sleepBars">
             <i style="height:65%"></i><i style="height:85%"></i><i style="height:55%"></i><i style="height:75%"></i><i style="height:95%"></i><i style="height:60%"></i><i style="height:80%"></i><i style="height:70%"></i>
           </div>
@@ -610,8 +1295,8 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
         <!-- Stress Slider Card -->
         <div class="stat-card purple" id="stressCard">
           <div class="stat-label">
-            <span>● Stress Level</span>
-            <span class="stress-reaction" id="stressEmoji">😌</span>
+            <span>Stress Level</span>
+            <span class="stress-indicator-dot" id="stressDot"></span>
           </div>
           <div class="bars" id="stressBars">
             <i style="height:20%"></i><i style="height:35%"></i><i style="height:30%"></i><i style="height:45%"></i><i style="height:40%"></i><i style="height:50%"></i><i style="height:55%"></i><i style="height:48%"></i>
@@ -626,26 +1311,132 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
         </div>
       </div>
 
-      <div class="section-title">Daily wellness check</div>
-      <div class="quiz">
+      <div class="section-title">
+        Daily vibe & wellness check
+        <span onclick="resetQuiz()">↺ Reset</span>
+      </div>
+      <div class="quiz" id="quizContainer">
         <div class="quiz-top">
-          <span>✿ Yes or No Quiz</span>
-          <span id="quizProgress">Question 1/5</span>
+          <span class="quiz-badge">Vibe Check</span>
+          <span id="quizProgress" style="color:#787280;font-size:11px">Question 1/5</span>
         </div>
-        <div class="quiz-question" id="quizQuestion">Have you been sleeping well recently?</div>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFill" style="width:20%"></div>
+        </div>
+        <div class="quiz-live-feedback" id="quizLiveFeedback" style="display:none">
+          <span id="quizFeedbackIcon"></span>
+          <span id="quizFeedbackText">Awesome</span>
+        </div>
+        <div class="quiz-question" id="quizQuestion">Did you wake up feeling well-rested today?</div>
         <div class="quiz-buttons" id="quizButtonsWrap">
-          <button onclick="answerQuiz('Yes')">Yes</button>
-          <button onclick="answerQuiz('No')">No</button>
+          <button class="quiz-btn yes" onclick="answerQuiz('Yes')">Yes</button>
+          <button class="quiz-btn no" onclick="answerQuiz('No')">Not really</button>
+        </div>
+      </div>
+
+      <!-- Daily Wellness Vitals: Water Level, Relax Time, Physical Activity Time -->
+      <div class="section-title">
+        Daily wellness vitals
+        <span>Tap to log</span>
+      </div>
+      <div class="vitals-grid">
+        <!-- 1. Water Level Card -->
+        <div class="vital-card water" id="waterCard">
+          <div class="vital-card-top">
+            <div class="vital-card-header">
+              <div class="vital-icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                </svg>
+              </div>
+              <span class="vital-label">Water Intake</span>
+            </div>
+            <span class="vital-goal-badge" id="waterGoalBadge">Goal: 2500 ml</span>
+          </div>
+          <div class="vital-main-row">
+            <div class="vital-val-large">
+              <span id="waterValue">1750</span><small>ml</small>
+            </div>
+            <div class="vital-quick-btns">
+              <button class="vital-btn" onclick="adjustWater(-250)">-250</button>
+              <button class="vital-btn" onclick="adjustWater(250)">+250ml</button>
+              <button class="vital-btn" onclick="adjustWater(500)">+500ml</button>
+            </div>
+          </div>
+          <div class="vital-progress-track">
+            <div class="vital-progress-fill" id="waterProgressFill" style="width:70%"></div>
+          </div>
+        </div>
+
+        <!-- 2. Relax Time Card -->
+        <div class="vital-card relax" id="relaxCard">
+          <div class="vital-card-top">
+            <div class="vital-card-header">
+              <div class="vital-icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 3"/>
+                </svg>
+              </div>
+              <span class="vital-label">Relax Time</span>
+            </div>
+            <span class="vital-goal-badge">Goal: 45 min</span>
+          </div>
+          <div class="vital-main-row">
+            <div class="vital-val-large">
+              <span id="relaxValue">35</span><small>min</small>
+            </div>
+            <div class="vital-quick-btns">
+              <button class="vital-btn" onclick="adjustRelax(10)">+10 min</button>
+              <button class="vital-btn" onclick="adjustRelax(15)">+15 min</button>
+            </div>
+          </div>
+          <div class="vital-progress-track">
+            <div class="vital-progress-fill" id="relaxProgressFill" style="width:77%"></div>
+          </div>
+        </div>
+
+        <!-- 3. Physical Activity Time Card -->
+        <div class="vital-card activity" id="activityCard">
+          <div class="vital-card-top">
+            <div class="vital-card-header">
+              <div class="vital-icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+              <span class="vital-label">Physical Activity</span>
+            </div>
+            <span class="vital-goal-badge">Goal: 60 min</span>
+          </div>
+          <div class="vital-main-row">
+            <div class="vital-val-large">
+              <span id="activityValue">45</span><small>min</small>
+            </div>
+            <div class="vital-quick-btns">
+              <button class="vital-btn" onclick="adjustActivity(15)">+15 min</button>
+              <button class="vital-btn" onclick="adjustActivity(30)">+30 min</button>
+            </div>
+          </div>
+          <div class="vital-progress-track">
+            <div class="vital-progress-fill" id="activityProgressFill" style="width:75%"></div>
+          </div>
         </div>
       </div>
 
       <div class="section-title">
         Your daily reflection
-        <span onclick="openJournalModal()">✎ Write note</span>
+        <span onclick="openNoteEditorModal()">Write note</span>
       </div>
-      <div class="card" onclick="openJournalModal()" style="cursor:pointer">
-        <div style="font-size:13px;font-weight:800" id="journalTitle">Take a moment for yourself.</div>
+      <div class="card reflection-card" onclick="openNoteEditorModal()" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13.5px;font-weight:800;letter-spacing:-.3px" id="journalTitle">Today's Reflection</div>
+          <span class="reflection-chip" id="journalTag">Calm</span>
+        </div>
         <p class="muted" id="journalSnippet" style="margin-top:6px;line-height:1.5">Understanding your emotions is the first step towards a healthier mind.</p>
+        <div class="reflection-footer">
+          <span class="view-notes-link" onclick="event.stopPropagation(); navigate('notesScreen')">View all notes (<span id="notesCountBadge">0</span>) →</span>
+        </div>
       </div>
     </section>
 
@@ -662,7 +1453,7 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
       <div class="section-title">Journal note</div>
       <textarea id="logNoteInput" class="input-field" rows="3" style="resize:none" placeholder="What made you feel this way today?"></textarea>
 
-      <button class="primary-btn" onclick="saveActiveMoodLog()">Save Today's Mood Entry ✓</button>
+      <button class="primary-btn" onclick="saveActiveMoodLog()">Save Today's Mood Entry</button>
       <button class="primary-btn outline" onclick="navigate('home')">Back to Home</button>
     </section>
 
@@ -738,7 +1529,7 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
       </div>
       <div class="settings-item" onclick="openJournalModal()">
         <span>Write today's reflection</span>
-        <span>✎</span>
+        <span style="font-size:11px;font-weight:800;color:#9A61B5">Edit</span>
       </div>
 
       <div class="section-title">Your data (CRUD)</div>
@@ -751,6 +1542,28 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
       <div style="text-align:center;margin-top:20px">
         <button class="primary-btn outline" style="width:auto;padding:8px 18px;font-size:11px" onclick="logout()">Sign Out / Switch User</button>
       </div>
+    </section>
+
+    <!-- 7. MY NOTES SCREEN -->
+    <section class="screen" id="notesScreen">
+      <div class="notes-header">
+        <div>
+          <h1 style="margin-bottom:4px">My Notes</h1>
+          <p class="muted">Reflections, daily thoughts & insights</p>
+        </div>
+        <button class="new-note-btn" onclick="openNoteEditorModal()">+ New Note</button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="notes-search-wrap">
+        <input type="text" id="notesSearchInput" class="notes-search-input" placeholder="Search notes or tags..." oninput="handleNotesSearch(this.value)">
+      </div>
+
+      <!-- Mood & Category Filter Chips -->
+      <div class="notes-filter-pills" id="notesFilterPills"></div>
+
+      <!-- Notes List -->
+      <div class="notes-list" id="notesList"></div>
     </section>
 
   </main>
@@ -769,6 +1582,10 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
       <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
       Calendar
     </button>
+    <button class="nav-btn" onclick="navigate('notesScreen',this)">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Notes
+    </button>
     <button class="nav-btn" onclick="navigate('more',this)">
       <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="19" cy="5" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="19" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="19" cy="19" r="1"/></svg>
       More
@@ -780,7 +1597,7 @@ h2{font-size:17px;letter-spacing:-.4px;font-weight:800}
     <div class="modal-sheet">
       <div class="modal-header">
         <h2 id="modalDateTitle">Modal Title</h2>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div id="modalBody"></div>
     </div>
@@ -889,11 +1706,47 @@ let wellnessMetrics = {
   sleep: '7h 20min',
   stressScore: 38,
   stressLevel: 'Calm',
+  waterLevel: 1750,
+  waterGoal: 2500,
+  relaxMinutes: 35,
+  relaxGoal: 45,
+  activityMinutes: 45,
+  activityGoal: 60,
   activity: '45 min',
   therapy: 'Booked',
   discipline: '5 Days',
   dailyReflection: 'Understanding your emotions is the first step towards a healthier mind.'
 };
+
+let userNotes = [
+  {
+    id: 'note-1',
+    date: 'Today, 9:30 AM',
+    title: 'Peaceful Morning Routine',
+    content: 'Brewed mint tea and sat quietly by the window. Breathing felt light and open today.',
+    moodTag: 'Calm',
+    color: '#D7A5F2',
+    timestamp: Date.now() - 3600000
+  },
+  {
+    id: 'note-2',
+    date: 'Yesterday, 8:15 PM',
+    title: 'Evening Gratitude & Walk',
+    content: 'Grateful for long walks with friends and calming evening air. Felt steady and recharged.',
+    moodTag: 'Happy',
+    color: '#A7F58A',
+    timestamp: Date.now() - 86400000
+  },
+  {
+    id: 'note-3',
+    date: 'Oct 30, 4:00 PM',
+    title: 'Daily Vibe Insight: Balanced Mind',
+    content: 'Passed the daily vibe check with high harmony! Keep hydrated and maintain gentle momentum.',
+    moodTag: 'Insight',
+    color: '#FFD84F',
+    timestamp: Date.now() - 172800000
+  }
+];
 
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
@@ -909,7 +1762,11 @@ function loadStorage() {
     const savedHistory = localStorage.getItem('moodaHistory');
     if (savedHistory) moodHistory = JSON.parse(savedHistory);
     const savedMetrics = localStorage.getItem('moodaMetrics');
-    if (savedMetrics) wellnessMetrics = JSON.parse(savedMetrics);
+    if (savedMetrics) {
+      wellnessMetrics = Object.assign({}, wellnessMetrics, JSON.parse(savedMetrics));
+    }
+    const savedNotes = localStorage.getItem('moodaNotes');
+    if (savedNotes) userNotes = JSON.parse(savedNotes);
   } catch (e) {
     console.warn('Storage loaded');
   }
@@ -919,6 +1776,7 @@ function saveStorage() {
   localStorage.setItem('moodaUser', JSON.stringify(currentUser));
   localStorage.setItem('moodaHistory', JSON.stringify(moodHistory));
   localStorage.setItem('moodaMetrics', JSON.stringify(wellnessMetrics));
+  localStorage.setItem('moodaNotes', JSON.stringify(userNotes));
 }
 
 loadStorage();
@@ -952,7 +1810,7 @@ document.getElementById('characters').innerHTML = `
 `;
 
 function previewMoodIntro(mName) {
-  showCustomToast(`Feeling ${mName}! ✦`);
+  showCustomToast(`Feeling ${mName}`);
 }
 
 /* ============================================================
@@ -981,7 +1839,8 @@ function navigate(screen, button) {
     let index = 0;
     if (screen === 'moodLogScreen') index = 1;
     if (screen === 'calendar') index = 2;
-    if (screen === 'more') index = 3;
+    if (screen === 'notesScreen') index = 3;
+    if (screen === 'more') index = 4;
     document.querySelectorAll('.nav-btn').forEach((b, i) => {
       b.classList.toggle('active', i === index);
     });
@@ -990,6 +1849,7 @@ function navigate(screen, button) {
   if (screen === 'home') syncHomeUI();
   if (screen === 'calendar') renderCalendar();
   if (screen === 'moodLogScreen') renderDedicatedMoodStudio();
+  if (screen === 'notesScreen') renderNotesScreen();
   if (screen === 'more') syncSettingsUI();
 }
 
@@ -1054,37 +1914,49 @@ function handleStressSlider(val) {
   wellnessMetrics.stressScore = val;
 
   let label = 'Calm';
-  let emoji = '😌';
+  let dotColor = '#9A61B5';
+  let dotGlow = 'rgba(154, 97, 181, 0.4)';
   let cardBg = '#EFE1F8';
   let barColor = '#9A61B5';
 
   if (val <= 25) {
     label = 'Relaxed';
-    emoji = '🕊️';
+    dotColor = '#0284C7';
+    dotGlow = 'rgba(2, 132, 199, 0.4)';
     cardBg = '#E3F4F9';
     barColor = '#60ADC2';
   } else if (val <= 50) {
     label = 'Calm & Steady';
-    emoji = '😌';
+    dotColor = '#9A61B5';
+    dotGlow = 'rgba(154, 97, 181, 0.4)';
     cardBg = '#EFE1F8';
     barColor = '#9A61B5';
   } else if (val <= 75) {
     label = 'Moderate Tension';
-    emoji = '⚡';
+    dotColor = '#D97706';
+    dotGlow = 'rgba(217, 119, 6, 0.4)';
     cardBg = '#FCECCE';
     barColor = '#CF9323';
   } else {
     label = 'High Alert';
-    emoji = '🔥';
+    dotColor = '#DC2626';
+    dotGlow = 'rgba(220, 38, 38, 0.4)';
     cardBg = '#FFD2CC';
     barColor = '#DD513D';
   }
 
   wellnessMetrics.stressLevel = label;
-  document.getElementById('stressValueText').textContent = label;
-  document.getElementById('stressPercentText').textContent = `${val}%`;
-  document.getElementById('stressEmoji').textContent = emoji;
-  document.getElementById('stressCard').style.background = cardBg;
+  const valText = document.getElementById('stressValueText');
+  if (valText) valText.textContent = label;
+  const pctText = document.getElementById('stressPercentText');
+  if (pctText) pctText.textContent = `${val}%`;
+  const dot = document.getElementById('stressDot');
+  if (dot) {
+    dot.style.background = dotColor;
+    dot.style.boxShadow = `0 0 10px ${dotGlow}`;
+  }
+  const card = document.getElementById('stressCard');
+  if (card) card.style.background = cardBg;
 
   const bars = document.querySelectorAll('#stressBars i');
   bars.forEach((b, idx) => {
@@ -1116,12 +1988,17 @@ function syncHomeUI() {
   document.getElementById('sleepValue').innerHTML = `${wellnessMetrics.sleep.replace('min','<small>min</small>')}`;
   
   const slider = document.getElementById('stressSliderInput');
-  slider.value = wellnessMetrics.stressScore || 38;
-  handleStressSlider(slider.value);
+  if (slider) {
+    slider.value = wellnessMetrics.stressScore || 38;
+    handleStressSlider(slider.value);
+  }
 
-  document.getElementById('journalSnippet').textContent = wellnessMetrics.dailyReflection;
+  const jSnippet = document.getElementById('journalSnippet');
+  if (jSnippet) jSnippet.textContent = wellnessMetrics.dailyReflection;
 
   renderMoods();
+  syncVitalsUI();
+  updateNotesCount();
 }
 
 function renderMoods() {
@@ -1209,7 +2086,7 @@ function saveActiveMoodLog() {
     tags: [...activeStudioTags]
   };
   saveStorage();
-  showCustomToast("Today's mood entry saved! ✓");
+  showCustomToast("Today's mood entry saved.");
   navigate('calendar');
 }
 
@@ -1271,7 +2148,7 @@ function renderCalendar() {
 function handleDayClick(key, isFuture) {
   // STRICT PREVENTION: Do not allow modifying next day or future dates!
   if (isFuture) {
-    showCustomToast("You can only log today or past days! ✨");
+    showCustomToast("You can only log today or past days.");
     return;
   }
   openDayInspector(key);
@@ -1460,43 +2337,498 @@ function saveSleepDuration() {
   showCustomToast('Sleep duration updated!');
 }
 
-/* Quiz Logic */
-const questions = [
-  'Have you been sleeping well recently?',
-  'Have you been feeling positive today?',
-  'Did you drink enough water today?',
-  'Have you taken time to relax?',
-  'Did you get some physical activity today?'
-];
-let questionIndex = 0;
-let quizAnswers = [];
-
-function answerQuiz(ans) {
-  quizAnswers.push(ans);
-  questionIndex++;
-  if (questionIndex >= questions.length) {
-    document.getElementById('quizQuestion').textContent = `Completed! Positive answers: ${quizAnswers.filter(a => a === 'Yes').length}/${questions.length}`;
-    document.getElementById('quizProgress').textContent = '5/5 Done';
-    document.getElementById('quizButtonsWrap').innerHTML = `
-      <button onclick="resetQuiz()">Retake Quiz ↺</button>
-    `;
-    return;
-  }
-  document.getElementById('quizQuestion').textContent = questions[questionIndex];
-  document.getElementById('quizProgress').textContent = `Question ${questionIndex + 1}/${questions.length}`;
+/* ============================================================
+   10. DAILY VITALS LOGIC (WATER, RELAX, PHYSICAL ACTIVITY)
+   ============================================================ */
+function adjustWater(amount) {
+  const current = wellnessMetrics.waterLevel || 1750;
+  const goal = wellnessMetrics.waterGoal || 2500;
+  wellnessMetrics.waterLevel = Math.max(0, Math.min(4000, current + amount));
+  saveStorage();
+  syncVitalsUI();
+  showCustomToast(amount > 0 ? `+${amount}ml water logged` : `${amount}ml water adjusted`);
 }
 
-function resetQuiz() {
-  questionIndex = 0;
-  quizAnswers = [];
-  document.getElementById('quizQuestion').textContent = questions[0];
-  document.getElementById('quizProgress').textContent = `Question 1/${questions.length}`;
-  document.getElementById('quizButtonsWrap').innerHTML = `
-    <button onclick="answerQuiz('Yes')">Yes</button>
-    <button onclick="answerQuiz('No')">No</button>
+function adjustRelax(amount) {
+  const current = wellnessMetrics.relaxMinutes || 35;
+  wellnessMetrics.relaxMinutes = Math.max(0, Math.min(180, current + amount));
+  saveStorage();
+  syncVitalsUI();
+  showCustomToast(`+${amount} min relax logged`);
+}
+
+function adjustActivity(amount) {
+  const current = wellnessMetrics.activityMinutes || 45;
+  wellnessMetrics.activityMinutes = Math.max(0, Math.min(240, current + amount));
+  wellnessMetrics.activity = `${wellnessMetrics.activityMinutes} min`;
+  saveStorage();
+  syncVitalsUI();
+  syncCalendarMiniStats();
+  showCustomToast(`+${amount} min activity logged`);
+}
+
+function syncVitalsUI() {
+  const water = wellnessMetrics.waterLevel || 1750;
+  const waterGoal = wellnessMetrics.waterGoal || 2500;
+  const wVal = document.getElementById('waterValue');
+  if (wVal) wVal.textContent = water;
+  const wFill = document.getElementById('waterProgressFill');
+  if (wFill) wFill.style.width = `${Math.min(100, Math.round((water / waterGoal) * 100))}%`;
+
+  const relax = wellnessMetrics.relaxMinutes || 35;
+  const relaxGoal = wellnessMetrics.relaxGoal || 45;
+  const rVal = document.getElementById('relaxValue');
+  if (rVal) rVal.textContent = relax;
+  const rFill = document.getElementById('relaxProgressFill');
+  if (rFill) rFill.style.width = `${Math.min(100, Math.round((relax / relaxGoal) * 100))}%`;
+
+  const act = wellnessMetrics.activityMinutes || 45;
+  const actGoal = wellnessMetrics.activityGoal || 60;
+  const aVal = document.getElementById('activityValue');
+  if (aVal) aVal.textContent = act;
+  const aFill = document.getElementById('activityProgressFill');
+  if (aFill) aFill.style.width = `${Math.min(100, Math.round((act / actGoal) * 100))}%`;
+}
+
+/* ============================================================
+   11. DAILY VIBE CHECK & INSTANT INSIGHTS GRAPH
+   ============================================================ */
+const vibeQuestions = [
+  {
+    text: 'Did you wake up feeling well-rested today?',
+    category: 'Rest & Sleep',
+    feedback: 'Sleep is the anchor of mental clarity.',
+    weight: 20
+  },
+  {
+    text: 'Have you stayed hydrated and refreshed throughout the day?',
+    category: 'Hydration',
+    feedback: 'Hydration fuels your vitality and mood.',
+    weight: 20
+  },
+  {
+    text: 'Did you take a moment of quiet pause or deep breathing?',
+    category: 'Calm & Relax',
+    feedback: 'Mindful pauses soothe your nervous system.',
+    weight: 20
+  },
+  {
+    text: 'Did you get some physical movement or active stretch today?',
+    category: 'Active Movement',
+    feedback: 'Movement releases natural feel-good energy.',
+    weight: 20
+  },
+  {
+    text: 'Are you feeling balanced and grounded right now?',
+    category: 'Emotional Balance',
+    feedback: 'Centering yourself builds daily resilience.',
+    weight: 20
+  }
+];
+
+let vibeIndex = 0;
+let vibeAnswers = [];
+
+function answerQuiz(ans) {
+  vibeAnswers.push({ ans, q: vibeQuestions[vibeIndex] });
+  
+  // Show quick live feedback without emoji
+  const fbWrap = document.getElementById('quizLiveFeedback');
+  const fbText = document.getElementById('quizFeedbackText');
+  const fbIcon = document.getElementById('quizFeedbackIcon');
+  if (fbWrap && fbText) {
+    fbText.textContent = ans === 'Yes' ? (vibeQuestions[vibeIndex].feedback || 'Great healthy momentum!') : 'Gentle self-care makes all the difference.';
+    if (fbIcon) fbIcon.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#28a745"></span>`;
+    fbWrap.style.display = 'flex';
+  }
+
+  vibeIndex++;
+  const progressPct = Math.round((vibeIndex / vibeQuestions.length) * 100);
+  const pFill = document.getElementById('quizProgressFill');
+  if (pFill) pFill.style.width = `${progressPct}%`;
+  const pText = document.getElementById('quizProgress');
+  if (pText) pText.textContent = `Question ${Math.min(vibeQuestions.length, vibeIndex + 1)}/${vibeQuestions.length}`;
+
+  if (vibeIndex >= vibeQuestions.length) {
+    setTimeout(renderQuizInsightsGraph, 350);
+    return;
+  }
+
+  setTimeout(() => {
+    const qEl = document.getElementById('quizQuestion');
+    if (qEl) qEl.textContent = vibeQuestions[vibeIndex].text;
+  }, 200);
+}
+
+function renderQuizInsightsGraph() {
+  const container = document.getElementById('quizContainer');
+  if (!container) return;
+
+  const yesCount = vibeAnswers.filter(a => a.ans === 'Yes').length;
+  const harmonyPct = Math.round((yesCount / vibeQuestions.length) * 100);
+
+  let archetype = 'Steady Balance';
+  let quote = 'You are maintaining a steady, healthy cadence today.';
+  if (harmonyPct >= 80) {
+    archetype = 'Radiant Harmony';
+    quote = 'High vitality and balanced energy across all vitals today!';
+  } else if (harmonyPct >= 60) {
+    archetype = 'Mindful & Centered';
+    quote = 'Solid grounding today with gentle room to recharge.';
+  } else {
+    archetype = 'Gentle Restoring';
+    quote = 'Prioritize quiet rest, warm hydration, and peaceful pauses.';
+  }
+
+  // Calculate pillar percentages
+  const sleepPct = vibeAnswers[0]?.ans === 'Yes' ? 90 : 55;
+  const hydrationPct = vibeAnswers[1]?.ans === 'Yes' ? 85 : 50;
+  const relaxPct = vibeAnswers[2]?.ans === 'Yes' ? 95 : 60;
+  const movementPct = vibeAnswers[3]?.ans === 'Yes' ? 88 : 50;
+
+  container.innerHTML = `
+    <div class="quiz-analysis-wrap">
+      <div class="quiz-top">
+        <span class="quiz-badge">Wellness Insights</span>
+        <span class="insights-harmony-score">${harmonyPct}% Harmony</span>
+      </div>
+
+      <div style="margin:12px 0 6px">
+        <div style="font-size:15px;font-weight:900;letter-spacing:-.3px;color:#111">${archetype}</div>
+        <p class="muted" style="margin-top:4px;font-size:12px;line-height:1.5">${quote}</p>
+      </div>
+
+      <!-- Instant Insights Graph -->
+      <div class="insights-graph-box">
+        <div class="insights-graph-top">
+          <span class="insights-graph-title">Vitals Breakdown Graph</span>
+          <span style="font-size:10px;font-weight:800;color:#8E8994">Live Today</span>
+        </div>
+        <div class="insights-bars">
+          <div class="insight-bar-row">
+            <span class="insight-bar-label">Rest & Sleep</span>
+            <div class="insight-bar-track">
+              <div class="insight-bar-fill" style="width:${sleepPct}%;background:#3B82F6"></div>
+            </div>
+            <span class="insight-bar-pct">${sleepPct}%</span>
+          </div>
+
+          <div class="insight-bar-row">
+            <span class="insight-bar-label">Hydration</span>
+            <div class="insight-bar-track">
+              <div class="insight-bar-fill" style="width:${hydrationPct}%;background:#0284C7"></div>
+            </div>
+            <span class="insight-bar-pct">${hydrationPct}%</span>
+          </div>
+
+          <div class="insight-bar-row">
+            <span class="insight-bar-label">Calm & Relax</span>
+            <div class="insight-bar-track">
+              <div class="insight-bar-fill" style="width:${relaxPct}%;background:#8B5CF6"></div>
+            </div>
+            <span class="insight-bar-pct">${relaxPct}%</span>
+          </div>
+
+          <div class="insight-bar-row">
+            <span class="insight-bar-label">Active Movement</span>
+            <div class="insight-bar-track">
+              <div class="insight-bar-fill" style="width:${movementPct}%;background:#10B981"></div>
+            </div>
+            <span class="insight-bar-pct">${movementPct}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-tags">
+        <span class="quiz-pill-tag green">Vitality ${harmonyPct}%</span>
+        <span class="quiz-pill-tag purple">Mindful Cadence</span>
+        <span class="quiz-pill-tag yellow">${archetype}</span>
+      </div>
+
+      <div class="quiz-actions-row">
+        <button class="quiz-action-add" id="saveInsightBtn" onclick="saveQuizInsightToNotes('${archetype}', ${harmonyPct})">
+          Save Insight to Notes +
+        </button>
+        <button class="quiz-action-retake" onclick="resetQuiz()">
+          Retake Check
+        </button>
+      </div>
+    </div>
   `;
 }
 
+function saveQuizInsightToNotes(archetype, pct) {
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  
+  const insightNote = {
+    id: 'note-' + Date.now(),
+    title: `Daily Vibe Insight: ${archetype}`,
+    content: `Completed daily vibe check with ${pct}% Harmony. Maintained steady hydration, mindful moments, and natural balance.`,
+    moodTag: 'Insight',
+    color: '#FFD84F',
+    date: dateStr,
+    timestamp: Date.now()
+  };
+
+  userNotes.unshift(insightNote);
+  saveStorage();
+  updateNotesCount();
+
+  const btn = document.getElementById('saveInsightBtn');
+  if (btn) {
+    btn.textContent = 'Saved to Notes';
+    btn.classList.add('saved');
+    btn.disabled = true;
+  }
+  showCustomToast('Insight added to My Notes!');
+}
+
+function resetQuiz() {
+  vibeIndex = 0;
+  vibeAnswers = [];
+  const container = document.getElementById('quizContainer');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="quiz-top">
+      <span class="quiz-badge">Vibe Check</span>
+      <span id="quizProgress" style="color:#787280;font-size:11px">Question 1/5</span>
+    </div>
+    <div class="quiz-progress-bar">
+      <div class="quiz-progress-fill" id="quizProgressFill" style="width:20%"></div>
+    </div>
+    <div class="quiz-live-feedback" id="quizLiveFeedback" style="display:none">
+      <span id="quizFeedbackIcon"></span>
+      <span id="quizFeedbackText">Awesome</span>
+    </div>
+    <div class="quiz-question" id="quizQuestion">${vibeQuestions[0].text}</div>
+    <div class="quiz-buttons" id="quizButtonsWrap">
+      <button class="quiz-btn yes" onclick="answerQuiz('Yes')">Yes</button>
+      <button class="quiz-btn no" onclick="answerQuiz('No')">Not really</button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   12. MY NOTES APP (FULL CRUD, SEARCH, FILTER, PERSISTENCE)
+   ============================================================ */
+let activeNotesFilter = 'All';
+let notesSearchQuery = '';
+let selectedEditorTag = 'Calm';
+let selectedEditorColor = '#D7A5F2';
+
+function renderNotesScreen() {
+  renderNotesFilters();
+  renderNotesList();
+  updateNotesCount();
+}
+
+function renderNotesFilters() {
+  const container = document.getElementById('notesFilterPills');
+  if (!container) return;
+  const filterCategories = ['All', 'Calm', 'Happy', 'Excited', 'Insight', 'Reflection'];
+  container.innerHTML = filterCategories.map(cat => `
+    <div class="filter-chip ${activeNotesFilter === cat ? 'active' : ''}" onclick="setNotesFilter('${cat}')">
+      ${cat}
+    </div>
+  `).join('');
+}
+
+function setNotesFilter(cat) {
+  activeNotesFilter = cat;
+  renderNotesFilters();
+  renderNotesList();
+}
+
+function handleNotesSearch(query) {
+  notesSearchQuery = (query || '').toLowerCase().trim();
+  renderNotesList();
+}
+
+function renderNotesList() {
+  const list = document.getElementById('notesList');
+  if (!list) return;
+
+  let filtered = userNotes.filter(n => {
+    const matchesFilter = activeNotesFilter === 'All' || (n.moodTag && n.moodTag.toLowerCase() === activeNotesFilter.toLowerCase());
+    const matchesSearch = !notesSearchQuery || 
+      (n.title && n.title.toLowerCase().includes(notesSearchQuery)) || 
+      (n.content && n.content.toLowerCase().includes(notesSearchQuery)) ||
+      (n.moodTag && n.moodTag.toLowerCase().includes(notesSearchQuery));
+    return matchesFilter && matchesSearch;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="notes-empty">
+        <div style="width:48px;height:48px;margin:0 auto 12px;background:#F1EDF5;border-radius:50%;display:grid;place-items:center;color:#8E8994">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <p style="font-weight:700">No notes found</p>
+        <p style="font-size:11px;color:#A09BA8">Tap "+ New Note" to write your thoughts.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Sort notes newest first
+  filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+  list.innerHTML = filtered.map(note => {
+    const moodColor = note.color || '#D7A5F2';
+    return `
+      <div class="note-item-card" style="border-left-color:${moodColor}">
+        <div class="note-card-top">
+          <span class="note-card-date">${note.date || 'Today'}</span>
+          <span class="note-mood-badge" style="background:${moodColor}33;color:#111">${note.moodTag || 'Note'}</span>
+        </div>
+        <div class="note-card-title">${escapeHTML(note.title || 'Untitled Note')}</div>
+        <div class="note-card-snippet">${escapeHTML(note.content || '')}</div>
+        <div class="note-card-actions">
+          <button class="note-action-btn" onclick="openNoteEditorModal('${note.id}')">Edit</button>
+          <button class="note-action-btn del" onclick="deleteNote('${note.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateNotesCount() {
+  const badge = document.getElementById('notesCountBadge');
+  if (badge) badge.textContent = userNotes.length;
+}
+
+function openNoteEditorModal(noteId) {
+  const isEdit = !!noteId;
+  const note = isEdit ? userNotes.find(n => n.id === noteId) : null;
+  const initialTitle = note ? note.title : '';
+  const initialContent = note ? note.content : '';
+  selectedEditorTag = note ? (note.moodTag || 'Calm') : 'Calm';
+  selectedEditorColor = note ? (note.color || '#D7A5F2') : '#D7A5F2';
+
+  document.getElementById('modalDateTitle').textContent = isEdit ? 'Edit Note' : 'New Note';
+  const body = document.getElementById('modalBody');
+  
+  const tagOptions = [
+    { tag: 'Calm', color: '#D7A5F2' },
+    { tag: 'Happy', color: '#A7F58A' },
+    { tag: 'Excited', color: '#FFD84F' },
+    { tag: 'Sleepy', color: '#9CC8F5' },
+    { tag: 'Bored', color: '#F3A4D9' },
+    { tag: 'Insight', color: '#FFE082' },
+    { tag: 'Reflection', color: '#B9F6CA' }
+  ];
+
+  body.innerHTML = `
+    <div class="input-group">
+      <label class="input-label">Title</label>
+      <input type="text" id="noteTitleInput" class="input-field" placeholder="Note headline..." value="${escapeHTML(initialTitle)}">
+    </div>
+
+    <label class="input-label">Category / Mood Tag</label>
+    <div class="tag-pills" id="noteEditorTags" style="margin-bottom:14px">
+      ${tagOptions.map(t => `
+        <div class="tag-pill ${t.tag === selectedEditorTag ? 'active' : ''}" 
+             onclick="selectNoteTag(this, '${t.tag}', '${t.color}')"
+             style="${t.tag === selectedEditorTag ? `background:${t.color};color:#111;font-weight:800` : ''}">
+          ${t.tag}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Content</label>
+      <textarea id="noteContentInput" class="input-field" rows="5" placeholder="Write your thoughts, feelings, or reflections...">${escapeHTML(initialContent)}</textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="primary-btn" onclick="saveNote('${noteId || ''}')">${isEdit ? 'Save Changes' : 'Create Note'}</button>
+      <button class="primary-btn outline" onclick="closeModal()" style="width:35%">Cancel</button>
+    </div>
+  `;
+
+  document.getElementById('crudModal').classList.add('open');
+}
+
+function selectNoteTag(el, tag, color) {
+  selectedEditorTag = tag;
+  selectedEditorColor = color;
+  document.querySelectorAll('#noteEditorTags .tag-pill').forEach(p => {
+    p.classList.remove('active');
+    p.style.background = '';
+    p.style.color = '';
+  });
+  el.classList.add('active');
+  el.style.background = color;
+  el.style.color = '#111';
+}
+
+function saveNote(noteId) {
+  const title = document.getElementById('noteTitleInput').value.trim() || 'Untitled Note';
+  const content = document.getElementById('noteContentInput').value.trim();
+  if (!content && !title) {
+    showCustomToast('Please enter note content');
+    return;
+  }
+
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+  if (noteId) {
+    const idx = userNotes.findIndex(n => n.id === noteId);
+    if (idx !== -1) {
+      userNotes[idx].title = title;
+      userNotes[idx].content = content;
+      userNotes[idx].moodTag = selectedEditorTag;
+      userNotes[idx].color = selectedEditorColor;
+      userNotes[idx].date = dateStr;
+    }
+    showCustomToast('Note updated.');
+  } else {
+    const newNote = {
+      id: 'note-' + Date.now(),
+      title: title,
+      content: content,
+      moodTag: selectedEditorTag,
+      color: selectedEditorColor,
+      date: dateStr,
+      timestamp: Date.now()
+    };
+    userNotes.unshift(newNote);
+    showCustomToast('Note created.');
+  }
+
+  saveStorage();
+  updateNotesCount();
+  closeModal();
+  renderNotesScreen();
+  syncHomeUI();
+}
+
+function deleteNote(noteId) {
+  if (confirm('Delete this note?')) {
+    userNotes = userNotes.filter(n => n.id !== noteId);
+    saveStorage();
+    renderNotesScreen();
+    updateNotesCount();
+    showCustomToast('Note deleted.');
+  }
+}
+
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* ============================================================
+   13. JOURNAL MODAL & PROFILE EDITORS
+   ============================================================ */
 function openJournalModal() {
   document.getElementById('modalDateTitle').textContent = 'Daily Reflection';
   const body = document.getElementById('modalBody');
@@ -1514,7 +2846,7 @@ function saveReflection() {
   saveStorage();
   syncHomeUI();
   closeModal();
-  showCustomToast('Reflection saved!');
+  showCustomToast('Reflection saved.');
 }
 
 /* Profile Editor */
@@ -1544,7 +2876,7 @@ function saveProfileChanges() {
   saveStorage();
   syncHomeUI();
   closeModal();
-  showCustomToast('Profile updated!');
+  showCustomToast('Profile updated.');
 }
 
 function togglePref(btn) {
@@ -1571,7 +2903,7 @@ function seedDemoData() {
   }
   saveStorage();
   renderCalendar();
-  showCustomToast('Loaded past days data!');
+  showCustomToast('Loaded past days data.');
 }
 
 function resetData() {
@@ -1614,13 +2946,137 @@ function showCustomToast(msg) {
     pointer-events:none;
   `;
   toast.textContent = msg;
-  document.querySelector('.app').appendChild(toast);
+  const app = document.querySelector('.app');
+  if (app) app.appendChild(toast);
   setTimeout(() => { if (toast) toast.remove(); }, 2200);
 }
+
+/* ============================================================
+   14. SLIDE TO GET STARTED WITH CIRCULAR EXPANSION TRANSITION
+   ============================================================ */
+(function() {
+  const track = document.getElementById('slideTrack');
+  const thumb = document.getElementById('slideThumb');
+  const fill = document.getElementById('slideGreenFill');
+  const text = document.getElementById('slideTrackText');
+  const overlay = document.getElementById('circleTransition');
+  if (!track || !thumb) return;
+
+  let dragging = false;
+  let startX = 0;
+  let thumbX = 0;
+  const max = () => track.clientWidth - thumb.offsetWidth - 8;
+
+  function setPos(x) {
+    const m = max();
+    x = Math.max(0, Math.min(m, x));
+    thumbX = x;
+    thumb.style.transform = `translateX(${x}px)`;
+    if (fill) fill.style.width = `${x + thumb.offsetWidth}px`;
+    if (text) {
+      if (x > m * 0.6) text.style.opacity = '0';
+      else text.style.opacity = '1';
+    }
+  }
+
+  function complete() {
+    setPos(max());
+    thumb.classList.add('completed');
+    if (overlay) {
+      overlay.classList.add('expanding');
+    }
+    celebrate();
+    setTimeout(() => {
+      checkAuthAndProceed();
+      setTimeout(() => {
+        if (overlay) overlay.classList.remove('expanding');
+        setPos(0);
+        thumb.classList.remove('completed');
+      }, 700);
+    }, 600);
+  }
+
+  thumb.addEventListener('mousedown', (e) => {
+    dragging = true;
+    startX = e.clientX - thumbX;
+    thumb.classList.add('dragging');
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    setPos(e.clientX - startX);
+  });
+  window.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    thumb.classList.remove('dragging');
+    if (thumbX > max() * 0.85) complete();
+    else setPos(0);
+  });
+
+  // touch support
+  thumb.addEventListener('touchstart', (e) => {
+    dragging = true;
+    startX = e.touches[0].clientX - thumbX;
+    thumb.classList.add('dragging');
+  }, {passive:true});
+  window.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    setPos(e.touches[0].clientX - startX);
+  }, {passive:true});
+  window.addEventListener('touchend', () => {
+    if (!dragging) return;
+    dragging = false;
+    thumb.classList.remove('dragging');
+    if (thumbX > max() * 0.85) complete();
+    else setPos(0);
+  });
+
+  // double click auto slide
+  track.addEventListener('dblclick', () => {
+    let x = 0;
+    const m = max();
+    const step = () => {
+      x += m / 12;
+      setPos(x);
+      if (x < m) requestAnimationFrame(step);
+      else complete();
+    };
+    requestAnimationFrame(step);
+  });
+
+  function celebrate() {
+    const colors = ['#A7F58A','#D7A5F2','#FF986F','#FFD84F','#9CC8F5','#F3A4D9'];
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement('div');
+      c.style.position = 'fixed';
+      c.style.left = '50%';
+      c.style.top = '50%';
+      c.style.width = '8px';
+      c.style.height = '8px';
+      c.style.borderRadius = '50%';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.pointerEvents = 'none';
+      c.style.zIndex = '99999';
+      document.body.appendChild(c);
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 90 + Math.random() * 180;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      c.animate([
+        { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0)`, opacity: 0 }
+      ], { duration: 800 + Math.random()*400, easing: 'cubic-bezier(.16,1,.3,1)' });
+      setTimeout(() => c.remove(), 1300);
+    }
+  }
+})();
 
 // Initial mount
 syncHomeUI();
 renderCalendar();
+syncVitalsUI();
+updateNotesCount();
 </script>
 </body>
 </html>
